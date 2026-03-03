@@ -1,6 +1,7 @@
 import logging
 import sys
 import os
+import time
 
 # Ensure backend module can be imported
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -18,10 +19,14 @@ def test_slm():
         question = "What does the fox do?"
         
         print("\nGenerating answer...")
+        start = time.time()
         answer = engine.generate_answer(context, question)
+        elapsed = time.time() - start
+        
         print(f"\nContext: {context}")
         print(f"Question: {question}")
         print(f"Answer: {answer}")
+        print(f"\n--- Inference latency: {elapsed:.2f} seconds ---")
         
         if "jumps" in answer.lower():
             print("\nSUCCESS: Model answered correctly.")
@@ -35,3 +40,4 @@ def test_slm():
 
 if __name__ == "__main__":
     test_slm()
+

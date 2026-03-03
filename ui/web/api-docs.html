@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SLM API — Developer Docs</title>
+    <meta name="description"
+        content="Full API reference and integration guide for the self-hosted SLM Support Assistant. Learn how to upload documents and query your local AI with any stack." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161d;
+            --surface2: #1a1e28;
+            --border: #252a38;
+            --border2: #2e3445;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --accent2: #22d3ee;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --text: #e2e8f0;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --code-bg: #0a0c10;
+            --radius: 10px;
+            --sidebar-w: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            padding: 0 0 2rem;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .sidebar-version {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0.75rem 1.5rem 0.4rem;
+            font-weight: 600;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.45rem 1.5rem;
+            font-size: 0.83rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .method-tag {
+            display: inline-flex;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-right: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            vertical-align: middle;
+        }
+
+        .get {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--green);
+        }
+
+        .post {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+        }
+
+        .del {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--red);
+        }
+
+        /* ── Main ── */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            max-width: 900px;
+            padding: 3rem 2.5rem;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            margin-bottom: 3.5rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--accent2);
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #e2e8f0 30%, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            max-width: 620px;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .chip {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid var(--border2);
+            background: var(--surface2);
+            color: var(--text-dim);
+        }
+
+        /* ── Sections ── */
+        .doc-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        p,
+        li {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── Base URL box ── */
+        .base-url-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--code-bg);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius);
+            padding: 0.85rem 1.2rem;
+            margin: 1.25rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .base-url-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .base-url-value {
+            color: var(--accent2);
+            flex: 1;
+        }
+
+        .copy-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            color: var(--text-muted);
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .copy-btn:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        /* ── Endpoint Cards ── */
+        .endpoint-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--border2);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .endpoint-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .endpoint-body {
+            border-top: 1px solid var(--border);
+            padding: 1.25rem;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.82rem;
+        }
+
+        .param-table th {
+            background: var(--surface2);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .param-table td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            vertical-align: top;
+        }
+
+        .param-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: var(--surface2);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: var(--accent2);
+        }
+
+        .required-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--red);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-lang {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .code-block pre {
+            padding: 1.1rem 1.25rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--text-dim);
+        }
+
+        /* Syntax colors */
+        .kw {
+            color: #c678dd;
+        }
+
+        .str {
+            color: #98c379;
+        }
+
+        .cm {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .fn {
+            color: #61afef;
+        }
+
+        .num {
+            color: #d19a66;
+        }
+
+        .key {
+            color: #e06c75;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.55rem 1.1rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── Steps ── */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.25rem;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+        .step:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 36px;
+            bottom: 0;
+            width: 1px;
+            background: var(--border2);
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            margin-bottom: 0.35rem;
+        }
+
+        .step-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Callouts ── */
+        .callout {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+
+        .callout-info {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
+        .callout-warn {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+        }
+
+        .callout-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Response box ── */
+        .response-box {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .response-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.08);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        /* ── Playground ── */
+        .playground {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .playground-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.25rem;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .playground-header h3 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .playground-body {
+            padding: 1.25rem;
+        }
+
+        .pg-field {
+            margin-bottom: 1rem;
+        }
+
+        .pg-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .pg-input {
+            width: 100%;
+            background: var(--code-bg);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            padding: 0.7rem 0.9rem;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            outline: none;
+            transition: border-color 0.15s;
+            resize: none;
+        }
+
+        .pg-input:focus {
+            border-color: var(--accent);
+        }
+
+        .pg-run {
+            background: linear-gradient(135deg, var(--accent), #818cf8);
+            border: none;
+            color: white;
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+
+        .pg-run:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .pg-run:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pg-result {
+            margin-top: 1rem;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            min-height: 60px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .pg-result.loading {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .pg-result.error {
+            color: var(--red);
+        }
+
+        .pg-result.success {
+            color: var(--green);
+        }
+
+        /* ── Status indicator ── */
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .status-indicator.online {
+            background: var(--green);
+        }
+
+        .status-indicator.offline {
+            background: var(--red);
+        }
+
+        /* ── Divider ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2.5rem 0;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <h2><span class="logo-badge">SLM</span> API Reference</h2>
+            <div class="sidebar-version">v1.0 · Self-Hosted</div>
+        </div>
+
+        <div class="sidebar-section-title">Getting Started</div>
+        <a href="#overview" class="active">Overview</a>
+        <a href="#base-url">Base URL</a>
+        <a href="#cors">CORS & Auth</a>
+        <a href="#quickstart">Quick Start</a>
+
+        <div class="sidebar-section-title">Endpoints</div>
+        <a href="#ep-health"><span class="method-tag get">GET</span>/health</a>
+        <a href="#ep-upload"><span class="method-tag post">POST</span>/v1/documents/upload</a>
+        <a href="#ep-query"><span class="method-tag post">POST</span>/v1/query</a>
+        <a href="#ep-reset"><span class="method-tag post">POST</span>/v1/reset</a>
+
+        <div class="sidebar-section-title">Integration</div>
+        <a href="#integration-js">JavaScript / Fetch</a>
+        <a href="#integration-python">Python / requests</a>
+        <a href="#integration-curl">cURL</a>
+        <a href="#integration-react">React Example</a>
+
+        <div class="sidebar-section-title">Playground</div>
+        <a href="#playground">Live Query Tester</a>
+
+        <div class="sidebar-section-title">Reference</div>
+        <a href="#errors">Error Codes</a>
+        <a href="#limits">Limits & Tips</a>
+    </nav>
+
+    <!-- ═══ MAIN ═══ -->
+    <main class="main">
+
+        <!-- Hero -->
+        <div class="hero" id="overview">
+            <div class="hero-badge">⚡ Self-Hosted · No Rate Limits · Offline</div>
+            <h1>SLM Support API</h1>
+            <p>A locally-running document intelligence API powered by Llama 3.2 1B and hierarchical RAG. Upload your
+                documents, then query them from any application — no external API keys, no data leaving your server.</p>
+            <div class="hero-chips">
+                <span class="chip">🦙 Llama 3.2 1B</span>
+                <span class="chip">🔍 Hierarchical RAG</span>
+                <span class="chip">⚡ GPU Accelerated</span>
+                <span class="chip">🔒 Fully Offline</span>
+                <span class="chip">📄 PDF · DOCX · TXT · MD</span>
+            </div>
+        </div>
+
+        <!-- Base URL -->
+        <section class="doc-section" id="base-url">
+            <div class="section-label">Configuration</div>
+            <h2>Base URL</h2>
+            <p>All API calls are made to your local server. By default, the Docker container exposes port <code
+                    class="inline">8000</code>.</p>
+            <div class="base-url-box">
+                <span class="base-url-label">Base URL</span>
+                <span class="base-url-value">http://localhost:8000</span>
+                <button class="copy-btn" onclick="copyText('http://localhost:8000', this)">Copy</button>
+            </div>
+            <div class="callout callout-info">
+                <span class="callout-icon">💡</span>
+                <span>To expose this API to other machines on your network, use your server's local IP (e.g. <code
+                        class="inline">http://192.168.1.x:8000</code>) or configure a reverse proxy like Nginx in front
+                    of it.</span>
+            </div>
+        </section>
+
+        <!-- CORS -->
+        <section class="doc-section" id="cors">
+            <div class="section-label">Access</div>
+            <h2>CORS & Authentication</h2>
+            <p>The API is configured with <strong>open CORS</strong> — any origin can call it. There is no
+                authentication by default since the server is typically only reachable on your local network or LAN.</p>
+            <div class="callout callout-warn">
+                <span class="callout-icon">⚠</span>
+                <span>If you expose this API to the public internet, you should add authentication middleware (e.g. an
+                    API key header) and restrict CORS origins in <code class="inline">backend/main.py</code>.</span>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="doc-section" id="quickstart">
+            <div class="section-label">Tutorial</div>
+            <h2>Quick Start</h2>
+            <p>Get from zero to a working query in 4 steps.</p>
+            <div class="steps">
+
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Start the server</h3>
+                        <p>Make sure Docker is running with the NVIDIA GPU support, then start the container:</p>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Copy</button></div>
+                            <pre>docker-compose up</pre>
+                        </div>
+                        <p>Wait for the log line: <code class="inline">SLM loaded successfully.</code> — the model has
+                            been loaded onto the GPU and is ready.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Check the server is alive</h3>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Copy</button></div>
+                            <pre>curl http://localhost:8000/health</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Response</span></div>
+                            <pre>{"status": "ok", "components": {"rag": "ready", "slm": "ready"}}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Upload a document</h3>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Copy</button></div>
+                            <pre>curl -X POST http://localhost:8000/v1/documents/upload \
+  -F "files=@your_document.pdf"</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Response</span></div>
+                            <pre>{"status": "success", "files_processed": ["your_document.pdf"], "chunks_indexed": 42}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h3>Ask a question</h3>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn"
+                                    onclick="copyCode(this)">Copy</button></div>
+                            <pre>curl -X POST http://localhost:8000/v1/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is the return policy?"}'</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-lang">Response</span></div>
+                            <pre>{"answer": "Returns are accepted within 30 days...", "sources": ["your_document.pdf"]}</pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- ═══ ENDPOINTS ═══ -->
+        <section class="doc-section" id="ep-health">
+            <div class="section-label">Endpoints</div>
+            <h2>Endpoints</h2>
+
+            <!-- GET /health -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-tag get" style="font-size:0.75rem;padding:3px 8px;">GET</span>
+                    <span class="endpoint-path">/health</span>
+                    <span class="endpoint-desc">Server liveness check</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns the current status of the API server and the SLM component. Use this to check if the
+                        model has finished loading before sending queries.</p>
+                    <div class="response-box">
+                        <div class="response-status">
+                            <div class="status-dot"></div>200 OK
+                        </div>
+                        <pre
+                            style="padding:0.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-dim);">{
+  <span class="key">"status"</span>: <span class="str">"ok"</span>,
+  <span class="key">"components"</span>: {
+    <span class="key">"rag"</span>: <span class="str">"ready"</span>,
+    <span class="key">"slm"</span>: <span class="str">"ready"</span>  <span class="cm">// "loading" during startup</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST /v1/documents/upload -->
+            <div class="endpoint-card" id="ep-upload">
+                <div class="endpoint-header">
+                    <span class="method-tag post" style="font-size:0.75rem;padding:3px 8px;">POST</span>
+                    <span class="endpoint-path">/v1/documents/upload</span>
+                    <span class="endpoint-desc">Upload & index documents</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Accepts one or more files as <code class="inline">multipart/form-data</code>. The server extracts
+                        text, applies hierarchical chunking, embeds the chunks, and adds them to the FAISS vector store.
+                    </p>
+                    <h3 style="margin-top:1rem;">Request Body</h3>
+                    <table class="param-table">
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">files</code></td>
+                            <td>File[]</td>
+                            <td><span class="required-badge">required</span></td>
+                            <td>One or more files. Supported: <code class="inline">.pdf</code> <code
+                                    class="inline">.docx</code> <code class="inline">.txt</code> <code
+                                    class="inline">.md</code></td>
+                        </tr>
+                    </table>
+                    <div class="response-box">
+                        <div class="response-status">
+                            <div class="status-dot"></div>200 OK
+                        </div>
+                        <pre
+                            style="padding:0.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-dim);">{
+  <span class="key">"status"</span>: <span class="str">"success"</span>,
+  <span class="key">"files_processed"</span>: [<span class="str">"manual.pdf"</span>, <span class="str">"faq.txt"</span>],
+  <span class="key">"chunks_indexed"</span>: <span class="num">87</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST /v1/query -->
+            <div class="endpoint-card" id="ep-query">
+                <div class="endpoint-header">
+                    <span class="method-tag post" style="font-size:0.75rem;padding:3px 8px;">POST</span>
+                    <span class="endpoint-path">/v1/query</span>
+                    <span class="endpoint-desc">Query the knowledge base</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>The main inference endpoint. Searches the vector store for relevant context, then generates a
+                        grounded answer using the Llama 3.2 SLM.</p>
+                    <h3 style="margin-top:1rem;">Request Body</h3>
+                    <table class="param-table">
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">question</code></td>
+                            <td>string</td>
+                            <td><span class="required-badge">required</span></td>
+                            <td>The natural language question to answer from the documents.</td>
+                        </tr>
+                    </table>
+                    <h3 style="margin-top:1rem;">Response</h3>
+                    <table class="param-table">
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">answer</code></td>
+                            <td>string</td>
+                            <td>The generated answer. If no relevant context found, returns a "don't know" response.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">sources</code></td>
+                            <td>string[]</td>
+                            <td>Filenames of the documents that contributed context for this answer.</td>
+                        </tr>
+                    </table>
+                    <div class="response-box">
+                        <div class="response-status">
+                            <div class="status-dot"></div>200 OK
+                        </div>
+                        <pre
+                            style="padding:0.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-dim);">{
+  <span class="key">"answer"</span>: <span class="str">"The warranty covers manufacturing defects for 2 years..."</span>,
+  <span class="key">"sources"</span>: [<span class="str">"warranty_policy.pdf"</span>]
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST /v1/reset -->
+            <div class="endpoint-card" id="ep-reset">
+                <div class="endpoint-header">
+                    <span class="method-tag del" style="font-size:0.75rem;padding:3px 8px;">POST</span>
+                    <span class="endpoint-path">/v1/reset</span>
+                    <span class="endpoint-desc">Wipe the knowledge base</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Deletes all indexed document vectors from the FAISS store and resets metadata. Use this to start
+                        fresh with a new set of documents.</p>
+                    <div class="response-box">
+                        <div class="response-status">
+                            <div class="status-dot"></div>200 OK
+                        </div>
+                        <pre
+                            style="padding:0.85rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-dim);">{<span class="key">"status"</span>: <span class="str">"success"</span>, <span class="key">"message"</span>: <span class="str">"Index reset"</span>}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- ═══ INTEGRATION ═══ -->
+        <section class="doc-section" id="integration-js">
+            <div class="section-label">Code Examples</div>
+            <h2>Integration Examples</h2>
+
+            <!-- JS -->
+            <h3 id="integration-js" style="margin-bottom:0.75rem;">JavaScript / Fetch</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn"
+                        onclick="copyCode(this)">Copy</button></div>
+                <pre><span class="cm">// 1. Upload a document</span>
+<span class="kw">async function</span> <span class="fn">uploadDocument</span>(file) {
+  <span class="kw">const</span> formData = <span class="kw">new</span> <span class="fn">FormData</span>();
+  formData.<span class="fn">append</span>(<span class="str">'files'</span>, file);
+
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'http://localhost:8000/v1/documents/upload'</span>, {
+    method: <span class="str">'POST'</span>,
+    body: formData
+  });
+  <span class="kw">return</span> res.<span class="fn">json</span>(); <span class="cm">// { status, files_processed, chunks_indexed }</span>
+}
+
+<span class="cm">// 2. Ask a question</span>
+<span class="kw">async function</span> <span class="fn">askQuestion</span>(question) {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'http://localhost:8000/v1/query'</span>, {
+    method: <span class="str">'POST'</span>,
+    headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+    body: <span class="fn">JSON.stringify</span>({ question })
+  });
+  <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+  console.<span class="fn">log</span>(data.answer);   <span class="cm">// the generated answer</span>
+  console.<span class="fn">log</span>(data.sources);  <span class="cm">// ["filename.pdf"]</span>
+  <span class="kw">return</span> data;
+}</pre>
+            </div>
+
+            <!-- Python -->
+            <h3 id="integration-python" style="margin: 1.5rem 0 0.75rem;">Python / requests</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                        onclick="copyCode(this)">Copy</button></div>
+                <pre><span class="kw">import</span> requests
+
+BASE_URL = <span class="str">"http://localhost:8000"</span>
+
+<span class="cm"># 1. Upload a document</span>
+<span class="kw">def</span> <span class="fn">upload_document</span>(filepath: str):
+    <span class="kw">with</span> <span class="fn">open</span>(filepath, <span class="str">"rb"</span>) <span class="kw">as</span> f:
+        res = requests.<span class="fn">post</span>(
+            <span class="str">f"{BASE_URL}/v1/documents/upload"</span>,
+            files={<span class="str">"files"</span>: f}
+        )
+    <span class="kw">return</span> res.<span class="fn">json</span>()
+
+<span class="cm"># 2. Query the knowledge base</span>
+<span class="kw">def</span> <span class="fn">ask</span>(question: str) -> dict:
+    res = requests.<span class="fn">post</span>(
+        <span class="str">f"{BASE_URL}/v1/query"</span>,
+        json={<span class="str">"question"</span>: question}
+    )
+    data = res.<span class="fn">json</span>()
+    <span class="kw">print</span>(<span class="str">f"Answer: {data['answer']}"</span>)
+    <span class="kw">print</span>(<span class="str">f"Sources: {data['sources']}"</span>)
+    <span class="kw">return</span> data
+
+<span class="cm"># Example usage</span>
+<span class="fn">upload_document</span>(<span class="str">"company_faq.pdf"</span>)
+<span class="fn">ask</span>(<span class="str">"What is the refund process?"</span>)</pre>
+            </div>
+
+            <!-- cURL -->
+            <h3 id="integration-curl" style="margin: 1.5rem 0 0.75rem;">cURL</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn"
+                        onclick="copyCode(this)">Copy</button></div>
+                <pre><span class="cm"># Upload</span>
+curl -X POST http://localhost:8000/v1/documents/upload \
+  -F <span class="str">"files=@/path/to/document.pdf"</span> \
+  -F <span class="str">"files=@/path/to/another.txt"</span>
+
+<span class="cm"># Query</span>
+curl -X POST http://localhost:8000/v1/query \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"question": "Summarize the key points."}'</span>
+
+<span class="cm"># Health check</span>
+curl http://localhost:8000/health
+
+<span class="cm"># Reset index</span>
+curl -X POST http://localhost:8000/v1/reset</pre>
+            </div>
+
+            <!-- React -->
+            <h3 id="integration-react" style="margin: 1.5rem 0 0.75rem;">React — Custom Hook</h3>
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">JSX</span><button class="copy-btn"
+                        onclick="copyCode(this)">Copy</button></div>
+                <pre><span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+
+<span class="kw">const</span> SLM_BASE = <span class="str">'http://localhost:8000'</span>;
+
+<span class="kw">export function</span> <span class="fn">useSLM</span>() {
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">false</span>);
+  <span class="kw">const</span> [answer, setAnswer] = <span class="fn">useState</span>(<span class="kw">null</span>);
+  <span class="kw">const</span> [sources, setSources] = <span class="fn">useState</span>([]);
+
+  <span class="kw">const</span> <span class="fn">query</span> = <span class="kw">async</span> (question) => {
+    <span class="fn">setLoading</span>(<span class="kw">true</span>);
+    <span class="kw">try</span> {
+      <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`${SLM_BASE}/v1/query`</span>, {
+        method: <span class="str">'POST'</span>,
+        headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+        body: <span class="fn">JSON.stringify</span>({ question })
+      });
+      <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+      <span class="fn">setAnswer</span>(data.answer);
+      <span class="fn">setSources</span>(data.sources);
+    } <span class="kw">finally</span> { <span class="fn">setLoading</span>(<span class="kw">false</span>); }
+  };
+
+  <span class="kw">return</span> { query, answer, sources, loading };
+}
+
+<span class="cm">// Usage in a component:</span>
+<span class="kw">export function</span> <span class="fn">AIChat</span>() {
+  <span class="kw">const</span> { query, answer, sources, loading } = <span class="fn">useSLM</span>();
+  <span class="kw">return</span> (
+    &lt;<span class="key">div</span>&gt;
+      &lt;<span class="key">button</span> onClick={() =&gt; <span class="fn">query</span>(<span class="str">"What is the pricing?"</span>)}&gt;Ask&lt;/<span class="key">button</span>&gt;
+      {loading &amp;&amp; &lt;<span class="key">p</span>&gt;Thinking...&lt;/<span class="key">p</span>&gt;}
+      {answer &amp;&amp; &lt;<span class="key">p</span>&gt;{answer}&lt;/<span class="key">p</span>&gt;}
+      {sources.map(s =&gt; &lt;<span class="key">small</span> key={s}&gt;Source: {s}&lt;/<span class="key">small</span>&gt;)}
+    &lt;/<span class="key">div</span>&gt;
+  );
+}</pre>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- ═══ PLAYGROUND ═══ -->
+        <section class="doc-section" id="playground">
+            <div class="section-label">Interactive</div>
+            <h2>Live Query Playground</h2>
+            <p style="margin-bottom:1.25rem;">Test the API directly from this page. Make sure your Docker container is
+                running first.</p>
+
+            <div class="playground">
+                <div class="playground-header">
+                    <h3>Query Tester</h3>
+                    <div class="live-badge">
+                        <div class="live-dot"></div> Live
+                    </div>
+                </div>
+                <div class="playground-body">
+                    <div class="pg-field">
+                        <label class="pg-label" for="pg-url-input">API Base URL</label>
+                        <input id="pg-url-input" type="text" class="pg-input" value="http://localhost:8000" />
+                    </div>
+                    <div class="pg-field">
+                        <label class="pg-label" for="pg-question-input">Question</label>
+                        <textarea id="pg-question-input" class="pg-input" rows="3"
+                            placeholder="Type your question here...">What is this document about?</textarea>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                        <button id="pg-run-btn" class="pg-run" onclick="runPlayground()">▶ Run Query</button>
+                        <div class="server-status">
+                            <div id="status-dot" class="status-indicator"></div>
+                            <span id="status-text">Checking server...</span>
+                        </div>
+                    </div>
+                    <div id="pg-result" class="pg-result loading">Enter a question and click Run Query.</div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Errors -->
+        <section class="doc-section" id="errors">
+            <div class="section-label">Reference</div>
+            <h2>Error Codes</h2>
+            <table class="param-table"
+                style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);">
+                <tr>
+                    <th>Status</th>
+                    <th>Meaning</th>
+                    <th>Common Cause</th>
+                </tr>
+                <tr>
+                    <td><code class="inline">200</code></td>
+                    <td>Success</td>
+                    <td>Request completed normally.</td>
+                </tr>
+                <tr>
+                    <td><code class="inline">422</code></td>
+                    <td>Validation Error</td>
+                    <td>Missing required field in request body (e.g., no <code class="inline">question</code> field).
+                    </td>
+                </tr>
+                <tr>
+                    <td><code class="inline">500</code></td>
+                    <td>Server Error</td>
+                    <td>Model not loaded yet, or internal exception. Check Docker logs.</td>
+                </tr>
+                <tr>
+                    <td><code class="inline">ERR_CONNECTION_REFUSED</code></td>
+                    <td>Network Error</td>
+                    <td>Docker container not running, or wrong port.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Limits -->
+        <section class="doc-section" id="limits">
+            <h2>Limits & Tips</h2>
+            <ul style="line-height:2;">
+                <li>📄 <strong>Supported file types:</strong> <code class="inline">.pdf</code>, <code
+                        class="inline">.docx</code>, <code class="inline">.txt</code>, <code class="inline">.md</code>
+                </li>
+                <li>⚡ <strong>Response time:</strong> 1–5 seconds on GPU. First query after startup may be slower as the
+                    GPU warms up.</li>
+                <li>💾 <strong>Model persists:</strong> The downloaded 800 MB GGUF model is cached in <code
+                        class="inline">./models/slm/</code> and survives rebuilds.</li>
+                <li>📚 <strong>Index persists:</strong> Uploaded documents survive container restarts — they're stored
+                    in <code class="inline">./data/vector_store/</code>.</li>
+                <li>🔄 <strong>Multi-file upload:</strong> You can upload multiple files in a single POST request by
+                    appending multiple <code class="inline">files</code> fields.</li>
+                <li>🧹 <strong>Changing documents:</strong> Call <code class="inline">POST /v1/reset</code> before
+                    uploading a completely new set of unrelated documents to avoid mixed context.</li>
+                <li>🔍 <strong>Answer grounding:</strong> The SLM will say "I don't know based on the provided
+                    documents" if the answer isn't in any uploaded file — it won't hallucinate.</li>
+            </ul>
+        </section>
+
+        <div class="footer">
+            SLM Support API · Self-Hosted · Llama 3.2 1B Q4_K_M · Hierarchical RAG · FAISS + sentence-transformers ·
+            Served by FastAPI + Uvicorn
+        </div>
+    </main>
+
+    <script>
+        const getBase = () => document.getElementById('pg-url-input').value.replace(/\/$/, '');
+
+        // ── Server status check ──
+        async function checkServer() {
+            const dot = document.getElementById('status-dot');
+            const txt = document.getElementById('status-text');
+            try {
+                const res = await fetch(`${getBase()}/health`, { signal: AbortSignal.timeout(3000) });
+                const data = await res.json();
+                dot.className = 'status-indicator online';
+                txt.textContent = `Server online · SLM ${data.components.slm}`;
+            } catch {
+                dot.className = 'status-indicator offline';
+                txt.textContent = 'Server offline — start Docker container';
+            }
+        }
+        checkServer();
+        setInterval(checkServer, 8000);
+
+        // ── Playground ──
+        async function runPlayground() {
+            const btn = document.getElementById('pg-run-btn');
+            const result = document.getElementById('pg-result');
+            const question = document.getElementById('pg-question-input').value.trim();
+            if (!question) return;
+
+            btn.disabled = true;
+            result.className = 'pg-result loading';
+            result.textContent = 'Sending query to SLM...';
+
+            try {
+                const res = await fetch(`${getBase()}/v1/query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+                const data = await res.json();
+                result.className = 'pg-result success';
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                result.className = 'pg-result error';
+                result.textContent = `Error: ${e.message}\n\nMake sure the Docker container is running.`;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ── Copy helpers ──
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+
+        // ── Active sidebar link on scroll ──
+        const sections = document.querySelectorAll('[id]');
+        const links = document.querySelectorAll('.sidebar a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+            links.forEach(l => {
+                l.classList.remove('active');
+                if (l.getAttribute('href') === `#${current}`) l.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

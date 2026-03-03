@@ -46,13 +46,32 @@ class DocumentIngester:
         if not words:
             return []
 
-        for i in range(0, len(words), self.chunk_size - self.chunk_overlap):
-            chunk_words = words[i:i + self.chunk_size]
-            chunk_text = " ".join(chunk_words)
-            chunks.append({
-                "text": chunk_text,
-                "source": source
-            })
+        # Hierarchical Tree Approach: Large Parent Chunks -> Small Child Chunks
+        parent_chunk_size = 800
+        parent_chunk_overlap = 150
+        
+        child_chunk_size = 200
+        child_chunk_overlap = 50
+
+        parent_id_counter = 0
+        for i in range(0, len(words), parent_chunk_size - parent_chunk_overlap):
+            parent_chunk_words = words[i:i + parent_chunk_size]
+            parent_text = " ".join(parent_chunk_words)
+            parent_id = f"parent_{source}_{parent_id_counter}"
+            parent_id_counter += 1
             
-        logger.info(f"Created {len(chunks)} chunks from {source}")
+            for j in range(0, len(parent_chunk_words), child_chunk_size - child_chunk_overlap):
+                child_words = parent_chunk_words[j:j + child_chunk_size]
+                if not child_words:
+                    continue
+                child_text = " ".join(child_words)
+                
+                chunks.append({
+                    "text": child_text,         # Used for Faiss embedding and searching
+                    "parent_text": parent_text, # Full parent context for SLM generation
+                    "source": source,
+                    "parent_id": parent_id
+                })
+            
+        logger.info(f"Created {len(chunks)} hierarchical child chunks from {source}")
         return chunks

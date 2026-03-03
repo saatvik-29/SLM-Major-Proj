@@ -36,14 +36,35 @@ class RAGEngine:
         if self.index.ntotal == 0:
             return []
 
+        # Retrieve more child chunks to ensure we get enough unique parents
+        search_k = max(k * 3, 10)
         query_vector = self.model.encode([query])
-        distances, indices = self.index.search(np.array(query_vector).astype('float32'), k)
+        distances, indices = self.index.search(np.array(query_vector).astype('float32'), search_k)
         
         results = []
+        seen_parents = set()
+        
         for i, idx in enumerate(indices[0]):
             if idx != -1 and idx < len(self.documents):
-                results.append(self.documents[idx])
+                doc = self.documents[idx]
+                parent_id = doc.get("parent_id")
                 
+                # Hierarchical retrieval: return parent_text if available, deduplicate by parent_id
+                if parent_id:
+                    if parent_id not in seen_parents:
+                        seen_parents.add(parent_id)
+                        results.append({
+                            "text": doc.get("parent_text", doc["text"]),
+                            "source": doc["source"]
+                        })
+                else:
+                    # Fallback for old flat chunks
+                    if doc["text"] not in [r["text"] for r in results]:
+                        results.append(doc)
+                
+                if len(results) >= k:
+                    break
+                    
         return results
 
     def save_index(self):
