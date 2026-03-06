@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Support System – Test Runner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ─── Design Tokens ─────────────────────────────────────── */
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #1e2530;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent2: #7ee787;
+            --danger: #f85149;
+            --warn: #e3b341;
+            --muted: #8b949e;
+            --text: #e6edf3;
+            --text-dim: #c9d1d9;
+            --pass-bg: rgba(35, 134, 54, 0.18);
+            --pass-bd: #2ea043;
+            --fail-bg: rgba(248, 81, 73, 0.15);
+            --fail-bd: #f85149;
+            --pending-bg: rgba(88, 166, 255, 0.10);
+            --pending-bd: #30363d;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        /* ─── Reset & Base ──────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ─── Scrollbar ─────────────────────────────────────────── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* ─── Header ────────────────────────────────────────────── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 17, 23, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-brand .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #58a6ff, #7ee787);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .header-brand h1 {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-brand span {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ─── Buttons ────────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.18s ease;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #79c0ff;
+            border-color: #79c0ff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.25);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dim);
+            border-color: var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-danger {
+            background: var(--fail-bg);
+            color: var(--danger);
+            border-color: var(--fail-bd);
+        }
+
+        .btn-danger:hover {
+            background: rgba(248, 81, 73, 0.28);
+        }
+
+        .btn-success {
+            background: var(--pass-bg);
+            color: var(--accent2);
+            border-color: var(--pass-bd);
+        }
+
+        .btn-success:hover {
+            background: rgba(35, 134, 54, 0.28);
+        }
+
+        .btn-warn {
+            background: rgba(227, 179, 65, 0.12);
+            color: var(--warn);
+            border-color: var(--warn);
+        }
+
+        .btn-warn:hover {
+            background: rgba(227, 179, 65, 0.22);
+        }
+
+        .btn-sm {
+            padding: 5px 11px;
+            font-size: 12px;
+        }
+
+        /* ─── Upload Zone ───────────────────────────────────────── */
+        #upload-zone {
+            max-width: 700px;
+            margin: 80px auto;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            text-align: center;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        #upload-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        #upload-zone .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        #upload-zone h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        #upload-zone p {
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .or-divider {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 16px 0;
+        }
+
+        .demo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--pending-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ─── Dashboard ─────────────────────────────────────────── */
+        #dashboard {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 32px;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            transition: transform 0.15s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+
+        .stat-card.total .value {
+            color: var(--accent);
+        }
+
+        .stat-card.passed .value {
+            color: var(--accent2);
+        }
+
+        .stat-card.failed .value {
+            color: var(--danger);
+        }
+
+        .stat-card.pending .value {
+            color: var(--muted);
+        }
+
+        /* Progress */
+        .progress-wrap {
+            margin-bottom: 24px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: var(--surface2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .filter-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            transition: all 0.15s;
+        }
+
+        .filter-tab.active {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+        }
+
+        .filter-tab:hover:not(.active) {
+            border-color: var(--muted);
+            color: var(--text);
+        }
+
+        .search-input {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: var(--radius-sm);
+            padding: 7px 14px;
+            font-size: 13px;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-input::placeholder {
+            color: var(--muted);
+        }
+
+        /* Module groups */
+        .module-group {
+            margin-bottom: 28px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px 14px;
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+        }
+
+        .module-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .module-header .module-count {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .module-pass-bar {
+            height: 4px;
+            background: var(--surface);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .module-pass-fill {
+            height: 100%;
+            background: var(--accent2);
+            border-radius: 2px;
+            transition: width 0.4s;
+        }
+
+        /* Test Cards */
+        .test-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .test-card {
+            background: var(--surface);
+            border: 1px solid var(--pending-bd);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .test-card.pass {
+            border-color: var(--pass-bd);
+            background: linear-gradient(135deg, var(--pass-bg), var(--surface));
+        }
+
+        .test-card.fail {
+            border-color: var(--fail-bd);
+            background: linear-gradient(135deg, var(--fail-bg), var(--surface));
+        }
+
+        .test-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+
+        .tc-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            border-radius: 6px;
+            padding: 3px 8px;
+            white-space: nowrap;
+        }
+
+        .tc-name {
+            font-weight: 600;
+            font-size: 13.5px;
+            flex: 1;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-badge.pass {
+            background: var(--pass-bg);
+            color: var(--accent2);
+            border: 1px solid var(--pass-bd);
+        }
+
+        .status-badge.fail {
+            background: var(--fail-bg);
+            color: var(--danger);
+            border: 1px solid var(--fail-bd);
+        }
+
+        .status-badge.pending {
+            background: var(--pending-bg);
+            color: var(--muted);
+            border: 1px solid var(--pending-bd);
+        }
+
+        .chevron {
+            color: var(--muted);
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+
+        /* Expanded body */
+        .card-body {
+            display: none;
+            padding: 0 16px 16px;
+            border-top: 1px solid var(--border);
+            margin-top: 0;
+        }
+
+        .card-body.open {
+            display: block;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .meta-item label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+
+        .meta-item p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .steps-list {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .steps-list li {
+            counter-increment: step;
+            padding: 6px 8px 6px 32px;
+            position: relative;
+            font-size: 12.5px;
+            color: var(--text-dim);
+            border-radius: 4px;
+        }
+
+        .steps-list li:hover {
+            background: var(--surface2);
+        }
+
+        .steps-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(88, 166, 255, 0.1);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        .expected-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12.5px;
+            color: var(--text-dim);
+            border-left: 3px solid var(--accent2);
+        }
+
+        .actual-input {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .actual-input:focus {
+            border-color: var(--accent);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        /* Notification toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Hidden test cards */
+        .test-card.hidden {
+            display: none;
+        }
+
+        /* Export panel */
+        .export-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header {
+                padding: 12px 16px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header>
+        <div class="header-brand">
+            <div class="logo">🎧</div>
+            <div>
+                <h1>Test Runner</h1>
+                <span>Customer Support System</span>
+            </div>
+        </div>
+        <div class="header-actions" id="header-actions">
+            <button class="btn btn-outline btn-sm" id="load-file-btn"
+                onclick="document.getElementById('file-input').click()">📂 Load .txt</button>
+            <input type="file" id="file-input" accept=".txt" />
+            <button class="btn btn-outline btn-sm" id="reset-all-btn" style="display:none" onclick="resetAll()">🔄 Reset
+                All</button>
+            <button class="btn btn-primary btn-sm" id="export-btn" style="display:none" onclick="exportResults()">⬇
+                Export Results</button>
+        </div>
+    </header>
+
+    <!-- ═══════════ UPLOAD ZONE ═══════════ -->
+    <div id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="icon">📋</div>
+        <h2>Load Test Cases</h2>
+        <p>Drag & drop your <strong>customer_support_test_cases.txt</strong> file<br>or click to browse</p>
+        <button class="btn btn-primary"
+            onclick="event.stopPropagation(); document.getElementById('file-input').click()">📂 Choose File</button>
+        <div class="or-divider">— or —</div>
+        <button class="btn btn-outline" onclick="event.stopPropagation(); loadBuiltIn()">⚡ Load Built-in Test
+            Cases</button>
+        <div class="or-divider" style="margin-top:16px"></div>
+        <span class="demo-badge">💡 Works with the customer_support_test_cases.txt generated in your project</span>
+    </div>
+
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <div id="dashboard">
+        <div class="container">
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card total">
+                    <div class="label">Total Cases</div>
+                    <div class="value" id="stat-total">0</div>
+                </div>
+                <div class="stat-card passed">
+                    <div class="label">✅ Passed</div>
+                    <div class="value" id="stat-pass">0</div>
+                </div>
+                <div class="stat-card failed">
+                    <div class="label">❌ Failed</div>
+                    <div class="value" id="stat-fail">0</div>
+                </div>
+                <div class="stat-card pending">
+                    <div class="label">⏳ Pending</div>
+                    <div class="value" id="stat-pending">0</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-wrap">
+                <div class="progress-info">
+                    <span>Execution Progress</span>
+                    <span id="progress-pct">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">All</button>
+                    <button class="filter-tab" data-filter="pending"
+                        onclick="setFilter('pending',this)">Pending</button>
+                    <button class="filter-tab" data-filter="pass" onclick="setFilter('pass',this)">Passed</button>
+                    <button class="filter-tab" data-filter="fail" onclick="setFilter('fail',this)">Failed</button>
+                </div>
+                <input class="search-input" type="text" placeholder="🔍 Search test cases…"
+                    oninput="searchCases(this.value)" />
+                <button class="btn btn-success btn-sm" onclick="markAll('pass')">✅ Pass All</button>
+                <button class="btn btn-danger  btn-sm" onclick="markAll('fail')">❌ Fail All</button>
+            </div>
+
+            <!-- Test case list renders here -->
+            <div id="test-list"></div>
+
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <script>
+        /* ════════════════════════════════════════════════════
+           DATA STORE
+        ════════════════════════════════════════════════════ */
+        let testCases = [];   // [{id, name, module, desc, pre, steps, expected, actual, status}]
+        let activeFilter = 'all';
+
+        /* ════════════════════════════════════════════════════
+           BUILT-IN DATA (mirrors the .txt file)
+        ════════════════════════════════════════════════════ */
+        const BUILT_IN = [
+            // ── Module 1: User Registration & Login ──────────────────
+            {
+                id: 'TC_001', module: 'User Registration & Login', name: 'Valid User Registration',
+                desc: 'Verify that a new customer can register with valid details.',
+                pre: 'User is on the Registration page.',
+                steps: ['Navigate to the Register page.', 'Enter a valid name, email, and password.', 'Click the "Register" button.'],
+                expected: 'User is registered successfully and redirected to the dashboard.'
+            },
+            {
+                id: 'TC_002', module: 'User Registration & Login', name: 'Registration with Duplicate Email',
+                desc: 'Verify that duplicate email registration is rejected.',
+                pre: 'An account with the email already exists.',
+                steps: ['Navigate to the Register page.', 'Enter an already-registered email address.', 'Click the "Register" button.'],
+                expected: 'Error message shown: "Email already in use. Please login."'
+            },
+            {
+                id: 'TC_003', module: 'User Registration & Login', name: 'Registration with Empty Fields',
+                desc: 'Verify that empty fields are not accepted during registration.',
+                pre: 'User is on the Registration page.',
+                steps: ['Navigate to the Register page.', 'Leave all fields empty.', 'Click the "Register" button.'],
+                expected: 'Validation error shown for all required fields.'
+            },
+            {
+                id: 'TC_004', module: 'User Registration & Login', name: 'Valid User Login',
+                desc: 'Verify that a registered user can log in with correct credentials.',
+                pre: 'User is already registered.',
+                steps: ['Navigate to the Login page.', 'Enter a valid email and password.', 'Click the "Login" button.'],
+                expected: 'User is logged in and redirected to the dashboard.'
+            },
+            {
+                id: 'TC_005', module: 'User Registration & Login', name: 'Login with Invalid Password',
+                desc: 'Verify that login fails with an incorrect password.',
+                pre: 'User is already registered.',
+                steps: ['Navigate to the Login page.', 'Enter a valid email and an incorrect password.', 'Click the "Login" button.'],
+                expected: 'Error message: "Invalid email or password."'
+            },
+            {
+                id: 'TC_006', module: 'User Registration & Login', name: 'Forgot Password – Valid Email',
+                desc: 'Verify password reset email is sent for a valid registered email.',
+                pre: 'User is registered.',
+                steps: ['Click "Forgot Password" on the Login page.', 'Enter the registered email address.', 'Click "Send Reset Link."'],
+                expected: 'A password reset link is sent to the user\'s email.'
+            },
+            {
+                id: 'TC_007', module: 'User Registration & Login', name: 'User Logout',
+                desc: 'Verify that a logged-in user can log out successfully.',
+                pre: 'User is logged in.',
+                steps: ['Click the "Logout" button from the navigation menu.'],
+                expected: 'User is logged out and redirected to the Login page.'
+            },
+
+            // ── Module 2: Ticket Management ──────────────────────────
+            {
+                id: 'TC_008', module: 'Ticket Management', name: 'Create a New Support Ticket',
+                desc: 'Verify that a customer can create a new support ticket.',
+                pre: 'User is logged in.',
+                steps: ['Navigate to "Create Ticket" page.', 'Enter a subject, description, and select category.', 'Click "Submit Ticket."'],
+                expected: 'Ticket is created and assigned a unique Ticket ID.'
+            },
+            {
+                id: 'TC_009', module: 'Ticket Management', name: 'Create Ticket with Empty Subject',
+                desc: 'Verify that a ticket cannot be submitted without a subject.',
+                pre: 'User is logged in.',
+                steps: ['Navigate to "Create Ticket" page.', 'Leave the subject field empty.', 'Fill in the description and click "Submit Ticket."'],
+                expected: 'Validation error: "Subject is required."'
+            },
+            {
+                id: 'TC_010', module: 'Ticket Management', name: 'View All Open Tickets',
+                desc: 'Verify that a user can view all their open tickets.',
+                pre: 'User is logged in and has at least one open ticket.',
+                steps: ['Navigate to "My Tickets".', 'Filter by status "Open."'],
+                expected: 'All open tickets are listed with Ticket ID, subject, and date.'
+            },
+            {
+                id: 'TC_011', module: 'Ticket Management', name: 'Close a Ticket',
+                desc: 'Verify that a user can close a resolved ticket.',
+                pre: 'User has at least one resolved ticket.',
+                steps: ['Navigate to "My Tickets".', 'Open a resolved ticket.', 'Click "Mark as Closed."'],
+                expected: 'Ticket status changes to "Closed."'
+            },
+            {
+                id: 'TC_012', module: 'Ticket Management', name: 'Reopen a Closed Ticket',
+                desc: 'Verify that a customer can reopen a closed ticket.',
+                pre: 'User has a closed ticket.',
+                steps: ['Navigate to "My Tickets".', 'Open a closed ticket.', 'Click "Reopen Ticket."'],
+                expected: 'Ticket status changes back to "Open."'
+            },
+            {
+                id: 'TC_013', module: 'Ticket Management', name: 'Attach File to Ticket',
+                desc: 'Verify that a user can attach a file while creating a ticket.',
+                pre: 'User is logged in.',
+                steps: ['Navigate to "Create Ticket".', 'Fill in subject and description.', 'Click "Attach File" and upload a .jpg or .pdf file.', 'Click "Submit Ticket."'],
+                expected: 'Ticket is created with the attached file visible.'
+            },
+            {
+                id: 'TC_014', module: 'Ticket Management', name: 'Search Ticket by Ticket ID',
+                desc: 'Verify that a ticket can be found by its unique ID.',
+                pre: 'At least one ticket exists.',
+                steps: ['Navigate to the search bar.', 'Enter a valid Ticket ID.', 'Click "Search."'],
+                expected: 'The corresponding ticket is displayed.'
+            },
+            {
+                id: 'TC_015', module: 'Ticket Management', name: 'Auto-assign Ticket to Available Agent',
+                desc: 'Verify that a new ticket is automatically assigned to an available agent.',
+                pre: 'At least one agent is online and available.',
+                steps: ['Customer creates a new ticket.'],
+                expected: 'Ticket is automatically assigned to an available agent.'
+            },
+
+            // ── Module 3: Live Chat ──────────────────────────────────
+            {
+                id: 'TC_016', module: 'Live Chat / Messaging', name: 'Start a Live Chat Session',
+                desc: 'Verify that a customer can initiate a live chat.',
+                pre: 'User is logged in and an agent is available.',
+                steps: ['Click the "Live Chat" button on the portal.', 'Enter a brief description of the issue.', 'Click "Start Chat."'],
+                expected: 'Chat window opens and customer is connected to an agent.'
+            },
+            {
+                id: 'TC_017', module: 'Live Chat / Messaging', name: 'Send a Message in Chat',
+                desc: 'Verify that a customer can send and receive messages.',
+                pre: 'Live chat session is active.',
+                steps: ['Type a message in the chat input box.', 'Press "Send" or hit Enter.'],
+                expected: 'Message is sent and visible to both the customer and agent.'
+            },
+            {
+                id: 'TC_018', module: 'Live Chat / Messaging', name: 'End a Chat Session',
+                desc: 'Verify that a user can end the chat session.',
+                pre: 'Live chat session is active.',
+                steps: ['Click the "End Chat" button.'],
+                expected: 'Chat session ends and summary/transcript is shown.'
+            },
+            {
+                id: 'TC_019', module: 'Live Chat / Messaging', name: 'Chat With No Agents Available',
+                desc: 'Verify behavior when no support agents are online.',
+                pre: 'No agents are currently logged in.',
+                steps: ['Click the "Live Chat" button.'],
+                expected: 'Message shown: "No agents available. Please leave a message."'
+            },
+            {
+                id: 'TC_020', module: 'Live Chat / Messaging', name: 'Chat Session Timeout',
+                desc: 'Verify that idle chat sessions are automatically closed after timeout.',
+                pre: 'Live chat session is active.',
+                steps: ['Start a chat session.', 'Leave the chat idle for the configured timeout period (e.g. 5 minutes).'],
+                expected: 'Chat session is closed automatically with a timeout message.'
+            },
+
+            // ── Module 4: Knowledge Base ─────────────────────────────
+            {
+                id: 'TC_021', module: 'Knowledge Base / FAQ', name: 'Browse Knowledge Base Articles',
+                desc: 'Verify that a user can browse help articles.',
+                pre: 'Knowledge base has at least one article.',
+                steps: ['Navigate to the "Help Center" or "Knowledge Base" page.', 'Browse available categories.', 'Click on a category.'],
+                expected: 'List of articles under that category is displayed.'
+            },
+            {
+                id: 'TC_022', module: 'Knowledge Base / FAQ', name: 'Search Knowledge Base',
+                desc: 'Verify that a user can search for help articles by keyword.',
+                pre: 'Knowledge base has articles.',
+                steps: ['Navigate to the Knowledge Base.', 'Enter a search keyword (e.g., "refund").', 'Click "Search."'],
+                expected: 'Relevant articles matching the keyword are displayed.'
+            },
+            {
+                id: 'TC_023', module: 'Knowledge Base / FAQ', name: 'Search with No Results',
+                desc: 'Verify behavior when no articles match the search keyword.',
+                pre: 'Knowledge base is populated.',
+                steps: ['Enter a keyword that doesn\'t match any article.', 'Click "Search."'],
+                expected: 'Message: "No articles found. Please contact support."'
+            },
+            {
+                id: 'TC_024', module: 'Knowledge Base / FAQ', name: 'View FAQ Page',
+                desc: 'Verify that the FAQ page loads correctly.',
+                pre: 'FAQs are configured in the system.',
+                steps: ['Navigate to the FAQ page.'],
+                expected: 'List of questions and answers is displayed correctly.'
+            },
+
+            // ── Module 5: Escalation & Priority ─────────────────────
+            {
+                id: 'TC_025', module: 'Escalation & Priority', name: 'Escalate a Ticket to Higher Level',
+                desc: 'Verify that an agent can escalate a ticket to L2 support.',
+                pre: 'Agent is logged in and has an open ticket.',
+                steps: ['Open an assigned ticket.', 'Click "Escalate Ticket."', 'Select escalation level (L2/L3).', 'Add a note and confirm.'],
+                expected: 'Ticket is escalated and the L2 agent is notified.'
+            },
+            {
+                id: 'TC_026', module: 'Escalation & Priority', name: 'Set Ticket Priority to High',
+                desc: 'Verify that priority of a ticket can be changed to High.',
+                pre: 'Agent is logged in.',
+                steps: ['Open any open ticket.', 'Change priority dropdown to "High."', 'Save the changes.'],
+                expected: 'Ticket priority is updated to "High."'
+            },
+            {
+                id: 'TC_027', module: 'Escalation & Priority', name: 'SLA Breach Notification',
+                desc: 'Verify that a notification is sent when SLA time is about to breach.',
+                pre: 'SLA rules are configured.',
+                steps: ['Create a high-priority ticket.', 'Do not respond within the SLA defined time.'],
+                expected: 'Alert/notification is sent to the agent and supervisor.'
+            },
+
+            // ── Module 6: Agent Management ───────────────────────────
+            {
+                id: 'TC_028', module: 'Agent Management', name: 'Add a New Agent',
+                desc: 'Verify that an admin can add a new support agent.',
+                pre: 'Admin is logged in.',
+                steps: ['Go to Admin Panel > Manage Agents.', 'Click "Add Agent."', 'Enter name, email, department, and role.', 'Click "Save."'],
+                expected: 'New agent is added and appears in the agents list.'
+            },
+            {
+                id: 'TC_029', module: 'Agent Management', name: 'Deactivate an Agent Account',
+                desc: 'Verify that an admin can deactivate an agent.',
+                pre: 'Admin is logged in and agent account exists.',
+                steps: ['Go to Admin Panel > Manage Agents.', 'Select an agent and click "Deactivate."'],
+                expected: 'Agent account is deactivated and agent cannot log in.'
+            },
+            {
+                id: 'TC_030', module: 'Agent Management', name: 'Assign Ticket to Specific Agent',
+                desc: 'Verify that an admin/supervisor can manually assign a ticket to a specific agent.',
+                pre: 'Both agent and ticket exist.',
+                steps: ['Open an unassigned ticket.', 'Use "Assign To" dropdown to select an agent.', 'Save.'],
+                expected: 'Ticket is assigned to the selected agent.'
+            },
+            {
+                id: 'TC_031', module: 'Agent Management', name: 'Agent View Assigned Tickets',
+                desc: 'Verify that an agent can see only their assigned tickets.',
+                pre: 'Agent is logged in.',
+                steps: ['Navigate to "My Tickets" as an agent.'],
+                expected: 'Only tickets assigned to that agent are visible.'
+            },
+
+            // ── Module 7: Notification System ───────────────────────
+            {
+                id: 'TC_032', module: 'Notification System', name: 'Email Notification on Ticket Creation',
+                desc: 'Verify that a confirmation email is sent on ticket creation.',
+                pre: 'Email notification is enabled.',
+                steps: ['Customer creates a new ticket.'],
+                expected: 'Confirmation email with Ticket ID is sent to the customer.'
+            },
+            {
+                id: 'TC_033', module: 'Notification System', name: 'Email Notification on Ticket Resolution',
+                desc: 'Verify that an email is sent when a ticket is resolved.',
+                pre: 'Ticket is open and agent resolves it.',
+                steps: ['Agent updates ticket status to "Resolved."'],
+                expected: 'Customer receives an email stating their ticket has been resolved.'
+            },
+            {
+                id: 'TC_034', module: 'Notification System', name: 'In-App Notification on New Message',
+                desc: 'Verify that a push/in-app notification appears when a new message is received.',
+                pre: 'Chat session is active.',
+                steps: ['Agent sends a message to the customer.'],
+                expected: 'Customer sees an in-app notification for the new message.'
+            },
+            {
+                id: 'TC_035', module: 'Notification System', name: 'Disable Email Notifications',
+                desc: 'Verify that a user can opt out of email notifications.',
+                pre: 'User is logged in.',
+                steps: ['Navigate to Account Settings > Notifications.', 'Toggle off "Email Notifications."', 'Save.'],
+                expected: 'User no longer receives email notifications.'
+            },
+
+            // ── Module 8: Reporting & Analytics ─────────────────────
+            {
+                id: 'TC_036', module: 'Reporting & Analytics', name: 'Admin Views Ticket Summary Report',
+                desc: 'Verify that an admin can view a summary report of all tickets.',
+                pre: 'Admin is logged in. Tickets exist in the system.',
+                steps: ['Navigate to Admin Panel > Reports.', 'Click "Ticket Summary."'],
+                expected: 'Report showing total, open, closed, and resolved tickets is displayed.'
+            },
+            {
+                id: 'TC_037', module: 'Reporting & Analytics', name: 'Filter Report by Date Range',
+                desc: 'Verify that reports can be filtered by a custom date range.',
+                pre: 'Admin is in the Reports section.',
+                steps: ['Select a start date and end date.', 'Click "Apply Filter."'],
+                expected: 'Report data is filtered and only shows records within the date range.'
+            },
+            {
+                id: 'TC_038', module: 'Reporting & Analytics', name: 'Export Report to CSV',
+                desc: 'Verify that a report can be exported as a CSV file.',
+                pre: 'Admin is viewing a report.',
+                steps: ['Click the "Export to CSV" button on the Reports page.'],
+                expected: 'CSV file is downloaded with correct report data.'
+            },
+            {
+                id: 'TC_039', module: 'Reporting & Analytics', name: 'Agent Performance Report',
+                desc: 'Verify that admin can view individual agent performance metrics.',
+                pre: 'Admin is logged in.',
+                steps: ['Navigate to Reports > Agent Performance.', 'Select a specific agent.'],
+                expected: 'Report shows tickets resolved, avg response time, and rating for that agent.'
+            },
+
+            // ── Module 9: Feedback & Ratings ─────────────────────────
+            {
+                id: 'TC_040', module: 'Feedback & Ratings', name: 'Customer Submits Feedback After Ticket Close',
+                desc: 'Verify that a customer can rate the support experience.',
+                pre: 'Ticket has been resolved/closed.',
+                steps: ['Open the closed ticket.', 'Click "Rate Your Experience."', 'Select a star rating (1-5) and add a comment.', 'Click "Submit Feedback."'],
+                expected: 'Feedback is recorded and a thank-you message is shown.'
+            },
+            {
+                id: 'TC_041', module: 'Feedback & Ratings', name: 'Submit Feedback Without Rating',
+                desc: 'Verify that feedback cannot be submitted without a star rating.',
+                pre: 'Ticket is closed.',
+                steps: ['Click "Rate Your Experience."', 'Leave the star rating unselected.', 'Click "Submit Feedback."'],
+                expected: 'Error: "Please select a rating before submitting."'
+            },
+            {
+                id: 'TC_042', module: 'Feedback & Ratings', name: 'Admin Views Average Rating',
+                desc: 'Verify that admin can view the overall average support rating.',
+                pre: 'At least one feedback is submitted.',
+                steps: ['Navigate to Admin Panel > Feedback Overview.'],
+                expected: 'Average rating score and total feedback count is displayed.'
+            },
+
+            // ── Module 10: Admin Panel ───────────────────────────────
+            {
+                id: 'TC_043', module: 'Admin Panel', name: 'Admin Login',
+                desc: 'Verify that the admin can login with valid admin credentials.',
+                pre: 'Admin account exists.',
+                steps: ['Navigate to Admin Login page.', 'Enter admin email and password.', 'Click "Login."'],
+                expected: 'Admin is logged in and redirected to the admin dashboard.'
+            },
+            {
+                id: 'TC_044', module: 'Admin Panel', name: 'Admin Creates a New Category',
+                desc: 'Verify that admin can create a new ticket category.',
+                pre: 'Admin is logged in.',
+                steps: ['Go to Admin Panel > Categories.', 'Click "Add Category."', 'Enter a category name (e.g., "Billing").', 'Click "Save."'],
+                expected: 'New category is added and visible in the dropdown during ticket creation.'
+            },
+            {
+                id: 'TC_045', module: 'Admin Panel', name: 'Admin Deletes a Category',
+                desc: 'Verify that admin can delete an existing category.',
+                pre: 'At least one category exists.',
+                steps: ['Go to Admin Panel > Categories.', 'Select a category.', 'Click "Delete" and confirm.'],
+                expected: 'Category is removed from the list.'
+            },
+            {
+                id: 'TC_046', module: 'Admin Panel', name: 'Admin Configures SLA Rules',
+                desc: 'Verify that admin can set SLA response time rules.',
+                pre: 'Admin is logged in.',
+                steps: ['Go to Admin Panel > SLA Settings.', 'Set response time for High priority: 1 hour.', 'Click "Save."'],
+                expected: 'SLA rule is saved and applied to new high-priority tickets.'
+            },
+            {
+                id: 'TC_047', module: 'Admin Panel', name: 'Admin Manages Department',
+                desc: 'Verify that admin can create and manage support departments.',
+                pre: 'Admin is logged in.',
+                steps: ['Navigate to Admin Panel > Departments.', 'Click "Add Department" and enter a name (e.g., "Technical Support").', 'Click "Save."'],
+                expected: 'Department is created and agents can be assigned to it.'
+            },
+            {
+                id: 'TC_048', module: 'Admin Panel', name: 'Unauthorized Access to Admin Panel',
+                desc: 'Verify that a regular customer cannot access the admin panel.',
+                pre: 'Customer is logged in.',
+                steps: ['Manually navigate to the admin dashboard URL.'],
+                expected: 'Access denied. Redirected to customer dashboard or error page.'
+            },
+            {
+                id: 'TC_049', module: 'Admin Panel', name: 'System Works on Multiple Browsers',
+                desc: 'Verify that the portal is functional across major browsers.',
+                pre: 'System is deployed.',
+                steps: ['Open the portal on Chrome, Firefox, Edge, and Safari.', 'Login and perform basic operations on each.'],
+                expected: 'Portal loads and functions correctly on all tested browsers.'
+            },
+            {
+                id: 'TC_050', module: 'Admin Panel', name: 'Mobile Responsiveness Check',
+                desc: 'Verify that the customer portal is responsive on mobile devices.',
+                pre: 'System is deployed.',
+                steps: ['Open the portal on a mobile device (or emulator).', 'Navigate through key pages: Login, Tickets, Chat, FAQ.'],
+                expected: 'All pages display correctly and are fully usable on mobile.'
+            },
+        ];
+
+        /* ════════════════════════════════════════════════════
+           FILE UPLOAD HANDLER
+        ════════════════════════════════════════════════════ */
+        const fileInput = document.getElementById('file-input');
+        const uploadZone = document.getElementById('upload-zone');
+
+        uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+        uploadZone.addEventListener('drop', e => {
+            e.preventDefault(); uploadZone.classList.remove('drag-over');
+            const f = e.dataTransfer.files[0];
+            if (f && f.name.endsWith('.txt')) readFile(f);
+            else showToast('⚠️ Please drop a .txt file', '#e3b341');
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files[0]) readFile(fileInput.files[0]);
+        });
+
+        function readFile(file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                parseTxtFile(e.target.result);
+                initDashboard();
+            };
+            reader.readAsText(file);
+        }
+
+        /* ════════════════════════════════════════════════════
+           PARSER – reads the .txt format we generated
+        ════════════════════════════════════════════════════ */
+        function parseTxtFile(text) {
+            testCases = [];
+            const entries = text.split(/TEST CASE ID\s*:/g).slice(1);
+
+            entries.forEach(block => {
+                const get = (key) => { const m = block.match(new RegExp(key + '\\s*:\\s*(.+)')); return m ? m[1].trim() : ''; };
+                const getM = (key) => { const m = block.match(new RegExp(key + '\\s*:([\\s\\S]*?)(?=\\n[A-Z][A-Za-z ]+\\s*:|$)')); return m ? m[1].trim() : ''; };
+
+                const idMatch = block.match(/^(.+)/);
+                const id = idMatch ? idMatch[1].trim() : '';
+                const name = get('Test Case Name');
+                const module_ = get('Module') || get('Test Module') || guessModule(id);
+                const desc = get('Description');
+                const pre = get('Pre-condition');
+                const expected = get('Expected Result');
+
+                // parse numbered steps
+                const stepsBlock = getM('Test Steps');
+                const stepsRaw = stepsBlock.split(/\n/).map(s => s.replace(/^\s*\d+\.\s*/, '').trim()).filter(Boolean);
+
+                if (id && name) {
+                    testCases.push({ id, name, module: module_, desc, pre, steps: stepsRaw, expected, actual: '', status: 'pending' });
+                }
+            });
+
+            // Fall back to built-in if parse yielded nothing useful
+            if (testCases.length < 5) {
+                showToast('ℹ️ Using built-in data (file format mismatch)', '#e3b341');
+                loadBuiltInData();
+            } else {
+                showToast(`✅ Loaded ${testCases.length} test cases from file`, '#7ee787');
+            }
+        }
+
+        function guessModule(id) {
+            const n = parseInt(id.replace(/\D/g, ''));
+            if (n <= 7) return 'User Registration & Login';
+            if (n <= 15) return 'Ticket Management';
+            if (n <= 20) return 'Live Chat / Messaging';
+            if (n <= 24) return 'Knowledge Base / FAQ';
+            if (n <= 27) return 'Escalation & Priority';
+            if (n <= 31) return 'Agent Management';
+            if (n <= 35) return 'Notification System';
+            if (n <= 39) return 'Reporting & Analytics';
+            if (n <= 42) return 'Feedback & Ratings';
+            return 'Admin Panel';
+        }
+
+        function loadBuiltIn() { loadBuiltInData(); initDashboard(); showToast('⚡ Built-in test cases loaded', '#58a6ff'); }
+        function loadBuiltInData() { testCases = BUILT_IN.map(t => ({ ...t, actual: '', status: 'pending' })); }
+
+        /* ════════════════════════════════════════════════════
+           DASHBOARD INIT
+        ════════════════════════════════════════════════════ */
+        function initDashboard() {
+            document.getElementById('upload-zone').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('reset-all-btn').style.display = '';
+            document.getElementById('export-btn').style.display = '';
+            renderAll();
+            updateStats();
+        }
+
+        /* ════════════════════════════════════════════════════
+           RENDER
+        ════════════════════════════════════════════════════ */
+        function renderAll() {
+            const modules = [...new Set(testCases.map(t => t.module))];
+            const list = document.getElementById('test-list');
+            list.innerHTML = '';
+
+            modules.forEach(mod => {
+                const cases = testCases.filter(t => t.module === mod);
+                const group = document.createElement('div');
+                group.className = 'module-group';
+                group.dataset.module = mod;
+
+                const passed = cases.filter(c => c.status === 'pass').length;
+                const pct = Math.round((passed / cases.length) * 100);
+
+                group.innerHTML = `
+      <div class="module-header">
+        <h3>${mod}</h3>
+        <div class="module-pass-bar"><div class="module-pass-fill" style="width:${pct}%"></div></div>
+        <span class="module-count">${passed}/${cases.length} passed</span>
+      </div>
+      <div class="test-grid" id="grid-${sanitize(mod)}"></div>
+    `;
+                list.appendChild(group);
+
+                const grid = document.getElementById('grid-' + sanitize(mod));
+                cases.forEach(tc => grid.appendChild(buildCard(tc)));
+            });
+        }
+
+        function sanitize(s) { return s.replace(/[^a-z0-9]/gi, '_'); }
+
+        function buildCard(tc) {
+            const card = document.createElement('div');
+            card.className = 'test-card ' + tc.status;
+            card.id = 'card-' + tc.id;
+            card.dataset.status = tc.status;
+            card.dataset.name = tc.name.toLowerCase();
+            card.dataset.id = tc.id.toLowerCase();
+
+            card.innerHTML = `
+    <div class="card-header" onclick="toggleCard('${tc.id}')">
+      <span class="tc-id">${tc.id}</span>
+      <span class="tc-name">${tc.name}</span>
+      <span class="status-badge ${tc.status}" id="badge-${tc.id}">${labelOf(tc.status)}</span>
+      <span class="chevron" id="chev-${tc.id}">▼</span>
+    </div>
+    <div class="card-body" id="body-${tc.id}">
+      <div class="meta-grid">
+        <div class="meta-item"><label>Description</label><p>${tc.desc}</p></div>
+        <div class="meta-item"><label>Pre-condition</label><p>${tc.pre}</p></div>
+        <div class="meta-item" style="grid-column:1/-1">
+          <label>Test Steps</label>
+          <ol class="steps-list">${tc.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+        </div>
+        <div class="meta-item" style="grid-column:1/-1">
+          <label>Expected Result</label>
+          <div class="expected-box">${tc.expected}</div>
+        </div>
+        <div class="meta-item" style="grid-column:1/-1">
+          <label>Actual Result (notes)</label>
+          <textarea class="actual-input" id="actual-${tc.id}" placeholder="Enter observed behavior…" oninput="saveActual('${tc.id}',this.value)">${tc.actual}</textarea>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-success" onclick="setStatus('${tc.id}','pass')">✅ Mark Pass</button>
+        <button class="btn btn-danger"  onclick="setStatus('${tc.id}','fail')">❌ Mark Fail</button>
+        <button class="btn btn-outline" onclick="setStatus('${tc.id}','pending')" style="margin-left:auto">⏳ Reset</button>
+      </div>
+    </div>
+  `;
+            return card;
+        }
+
+        function labelOf(s) { return s === 'pass' ? '✅ PASS' : s === 'fail' ? '❌ FAIL' : '⏳ PENDING'; }
+
+        /* ════════════════════════════════════════════════════
+           CARD TOGGLE
+        ════════════════════════════════════════════════════ */
+        function toggleCard(id) {
+            const body = document.getElementById('body-' + id);
+            const chev = document.getElementById('chev-' + id);
+            body.classList.toggle('open');
+            chev.classList.toggle('open');
+        }
+
+        /* ════════════════════════════════════════════════════
+           STATUS ACTIONS
+        ════════════════════════════════════════════════════ */
+        function setStatus(id, status) {
+            const tc = testCases.find(t => t.id === id);
+            if (!tc) return;
+            tc.status = status;
+
+            const card = document.getElementById('card-' + id);
+            const badge = document.getElementById('badge-' + id);
+            card.className = 'test-card ' + status;
+            card.dataset.status = status;
+            badge.className = 'status-badge ' + status;
+            badge.textContent = labelOf(status);
+
+            updateStats();
+            updateModuleBar(tc.module);
+            applyFilter(activeFilter);
+            showToast(status === 'pass' ? `✅ ${id} marked PASS` : status === 'fail' ? `❌ ${id} marked FAIL` : `⏳ ${id} reset`,
+                status === 'pass' ? '#7ee787' : status === 'fail' ? '#f85149' : '#8b949e');
+        }
+
+        function saveActual(id, val) {
+            const tc = testCases.find(t => t.id === id);
+            if (tc) tc.actual = val;
+        }
+
+        function markAll(status) {
+            const visible = testCases.filter(tc => {
+                const card = document.getElementById('card-' + tc.id);
+                return card && !card.classList.contains('hidden');
+            });
+            visible.forEach(tc => setStatus(tc.id, status));
+        }
+
+        function resetAll() {
+            testCases.forEach(tc => { tc.status = 'pending'; tc.actual = ''; });
+            renderAll();
+            updateStats();
+            applyFilter(activeFilter);
+            showToast('🔄 All test cases reset', '#8b949e');
+        }
+
+        /* ════════════════════════════════════════════════════
+           STATS
+        ════════════════════════════════════════════════════ */
+        function updateStats() {
+            const total = testCases.length;
+            const passed = testCases.filter(t => t.status === 'pass').length;
+            const failed = testCases.filter(t => t.status === 'fail').length;
+            const pending = total - passed - failed;
+            const done = passed + failed;
+            const pct = total ? Math.round((done / total) * 100) : 0;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-pass').textContent = passed;
+            document.getElementById('stat-fail').textContent = failed;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('progress-pct').textContent = pct + '% executed';
+        }
+
+        function updateModuleBar(mod) {
+            const cases = testCases.filter(t => t.module === mod);
+            const passed = cases.filter(c => c.status === 'pass').length;
+            const pct = Math.round((passed / cases.length) * 100);
+            const fills = document.querySelectorAll('[id^="grid-' + sanitize(mod) + '"]');
+            fills.forEach(el => {
+                const fill = el.closest('.module-group')?.querySelector('.module-pass-fill');
+                const count = el.closest('.module-group')?.querySelector('.module-count');
+                if (fill) fill.style.width = pct + '%';
+                if (count) count.textContent = `${passed}/${cases.length} passed`;
+            });
+        }
+
+        /* ════════════════════════════════════════════════════
+           FILTER & SEARCH
+        ════════════════════════════════════════════════════ */
+        function setFilter(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyFilter(filter);
+        }
+
+        function applyFilter(filter) {
+            const q = (document.querySelector('.search-input')?.value || '').toLowerCase();
+            testCases.forEach(tc => {
+                const card = document.getElementById('card-' + tc.id);
+                if (!card) return;
+                const matchFilter = filter === 'all' || tc.status === filter;
+                const matchSearch = !q || tc.name.toLowerCase().includes(q) || tc.id.toLowerCase().includes(q);
+                card.classList.toggle('hidden', !(matchFilter && matchSearch));
+            });
+
+            // hide empty module groups
+            document.querySelectorAll('.module-group').forEach(grp => {
+                const any = [...grp.querySelectorAll('.test-card')].some(c => !c.classList.contains('hidden'));
+                grp.style.display = any ? '' : 'none';
+            });
+        }
+
+        function searchCases(q) { applyFilter(activeFilter); }
+
+        /* ════════════════════════════════════════════════════
+           EXPORT
+        ════════════════════════════════════════════════════ */
+        function exportResults() {
+            const now = new Date();
+            const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+            const header = 'TC_ID,Module,Test Case Name,Status,Actual Result\n';
+            const rows = testCases.map(tc =>
+                `"${tc.id}","${tc.module}","${tc.name}","${tc.status.toUpperCase()}","${tc.actual.replace(/"/g, '""')}"`
+            ).join('\n');
+            const passed = testCases.filter(t => t.status === 'pass').length;
+            const failed = testCases.filter(t => t.status === 'fail').length;
+            const pending = testCases.filter(t => t.status === 'pending').length;
+            const footer = `\n"","","SUMMARY","",""` +
+                `\n"","","Total","${testCases.length}",""` +
+                `\n"","","Passed","${passed}",""` +
+                `\n"","","Failed","${failed}",""` +
+                `\n"","","Pending","${pending}",""` +
+                `\n"","","Exported At","${stamp}",""`;
+
+            const blob = new Blob([header + rows + footer], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `test_results_${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}.csv`;
+            a.click(); URL.revokeObjectURL(url);
+            showToast('⬇ Results exported as CSV', '#58a6ff');
+        }
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        /* ════════════════════════════════════════════════════
+           TOAST
+        ════════════════════════════════════════════════════ */
+        let toastTimer;
+        function showToast(msg, color = '#e6edf3') {
+            const t = document.getElementById('toast');
+            t.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span> ${msg}`;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+        }
+    </script>
+</body>
+
+</html>

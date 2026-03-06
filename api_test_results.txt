@@ -1,0 +1,596 @@
+==========================================================================================
+  CUSTOMER SUPPORT SYSTEM - API TEST RESULTS
+  Server     : http://localhost:8000
+  Run Date   : 2026-03-06 20:54:35
+  Total      : 33  |  PASS: 31  |  FAIL: 2
+==========================================================================================
+
+Test ID    : TC_API_01
+Name       : Health endpoint returns 200 + status=ok
+Status     : [PASS]
+Time       : 0.004s
+─── INPUT ──────────────────────────────────────────────────────
+GET /health
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "ok",
+  "components": {
+    "rag": "ready",
+    "slm": "ready"
+  }
+}
+─── NOTE ───────────────────────────────────────────────────────
+status==ok
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_02
+Name       : Health endpoint includes components object
+Status     : [PASS]
+Time       : 0.002s
+─── INPUT ──────────────────────────────────────────────────────
+GET /health → check components
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "rag": "ready",
+  "slm": "ready"
+}
+─── NOTE ───────────────────────────────────────────────────────
+components present
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_03
+Name       : Health endpoint shows SLM as ready
+Status     : [PASS]
+Time       : 0.002s
+─── INPUT ──────────────────────────────────────────────────────
+GET /health → slm==ready
+─── OUTPUT ─────────────────────────────────────────────────────
+slm: ready
+─── NOTE ───────────────────────────────────────────────────────
+SLM loaded
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_04
+Name       : Health endpoint returns JSON content-type
+Status     : [PASS]
+Time       : 0.002s
+─── INPUT ──────────────────────────────────────────────────────
+GET /health → Content-Type
+─── OUTPUT ─────────────────────────────────────────────────────
+application/json
+─── NOTE ───────────────────────────────────────────────────────
+JSON content-type
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_05
+Name       : Upload a .txt document successfully
+Status     : [PASS]
+Time       : 0.02s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/documents/upload  file=sample_policy.txt
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "success",
+  "files_processed": [
+    "sample_policy.txt"
+  ],
+  "chunks_indexed": 1
+}
+─── NOTE ───────────────────────────────────────────────────────
+chunks indexed: 1
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_06
+Name       : Upload creates positive chunk count
+Status     : [PASS]
+Time       : 0.06s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/documents/upload → chunks_indexed > 0
+─── OUTPUT ─────────────────────────────────────────────────────
+chunks_indexed = 1
+─── NOTE ───────────────────────────────────────────────────────
+Chunking works
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_07
+Name       : Upload records filename in response
+Status     : [PASS]
+Time       : 0.065s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/documents/upload → filename in files_processed
+─── OUTPUT ─────────────────────────────────────────────────────
+['myfile.txt']
+─── NOTE ───────────────────────────────────────────────────────
+Filename recorded
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_08
+Name       : Upload multiple files in one request
+Status     : [PASS]
+Time       : 0.09s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/documents/upload  files=[doc_a.txt, doc_b.txt]
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "success",
+  "files_processed": [
+    "doc_a.txt",
+    "doc_b.txt"
+  ],
+  "chunks_indexed": 2
+}
+─── NOTE ───────────────────────────────────────────────────────
+Both files processed: ['doc_a.txt', 'doc_b.txt']
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_09
+Name       : Upload with no files → 422 validation error
+Status     : [PASS]
+Time       : 0.004s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/documents/upload  (no files attached)
+─── OUTPUT ─────────────────────────────────────────────────────
+HTTP 422: {"detail":[{"type":"missing","loc":["body","files"],"msg":"Field required","input":null}]}
+─── NOTE ───────────────────────────────────────────────────────
+422 Unprocessable Entity as expected
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_25
+Name       : Upload works correctly after reset
+Status     : [PASS]
+Time       : 0.074s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/reset → POST /v1/documents/upload
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "success",
+  "files_processed": [
+    "fresh.txt"
+  ],
+  "chunks_indexed": 1
+}
+─── NOTE ───────────────────────────────────────────────────────
+Re-upload after reset works
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_27
+Name       : E2E: reset → upload → query refund timeline
+Status     : [PASS]
+Time       : 0.516s
+─── INPUT ──────────────────────────────────────────────────────
+E2E: reset → upload → query 'How long does a refund take?'
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "According to the source, a refund takes 5-7 business days to process after the customer requests one.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Correct refund timeline found
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_10
+Name       : Query: refund policy
+Status     : [PASS]
+Time       : 0.754s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="What is the refund policy?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "The refund policy is as follows:\n\n- Customers may request a refund within 30 days of purchase.\n- Refunds are processed within 5-7 business days.\n- Digital products are non-refundable once downloaded.\n- Password Reset: Users can reset their password by clicking 'Forgot Password' on the login page. A reset link is sent to the registered email address. The link expires after 24 hours.\n- Billing: We accept Visa, Mastercard, and PayPal. Invoices are generated on the 1st.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Got answer (470 chars)
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_11
+Name       : Query: password reset steps
+Status     : [PASS]
+Time       : 0.26s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="How do I reset my password?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "You can reset your password by clicking 'Forgot Password' on the login page, and a reset link will be sent to your registered email address. The link expires after 24 hours.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer mentions password reset
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_12
+Name       : Query: accepted payment methods
+Status     : [FAIL]
+Time       : 0.084s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="What payment methods do you accept?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "I don't know based on the provided documents.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer missing payment info
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_13
+Name       : Query: contact customer support
+Status     : [PASS]
+Time       : 0.433s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="How can I contact customer support?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "You can contact customer support by:\n\n1. Clicking 'Forgot Password' on the login page and following the instructions.\n2. Sending an email to [support@yourcompany.com](mailto:support@yourcompany.com) with your issue.\n3. Calling the phone number listed in the billing section of your invoice.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer contains contact info
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_14
+Name       : Query: return policy
+Status     : [PASS]
+Time       : 0.739s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="What is the return policy?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "The return policy is as follows:\n\n- Refund Policy: Customers may request a refund within 30 days of purchase.\n- Refunds are processed within 5-7 business days.\n- Digital products are non-refundable once downloaded.\n- Password Reset: Users can reset their password by clicking 'Forgot Password' on the login page.\n- A reset link is sent to the registered email address.\n- The link expires after 24 hours.\n- Billing: We accept Visa, Mastercard, and PayPal. Invoices are generated on the 1st.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer covers return policy
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_15
+Name       : Query response includes sources list
+Status     : [PASS]
+Time       : 0.636s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="What is the refund timeline?" → check sources
+─── OUTPUT ─────────────────────────────────────────────────────
+sources = ['query_seed.txt', 'e2e.txt']
+─── NOTE ───────────────────────────────────────────────────────
+Sources: ['query_seed.txt', 'e2e.txt']
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_16
+Name       : Query: out-of-domain topic handled gracefully
+Status     : [PASS]
+Time       : 0.092s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="What is the chemical formula of water?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "I don't know based on the provided documents.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Responded gracefully to out-of-domain question
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_17
+Name       : Query: empty question string
+Status     : [PASS]
+Time       : 0.167s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="" (empty)
+─── OUTPUT ─────────────────────────────────────────────────────
+HTTP 200: {"answer":"Based on the provided context, the answer to the question is:\n\nI don't know based on the provided documents.","sources":["query_seed.txt","e2e.txt"]}
+─── NOTE ───────────────────────────────────────────────────────
+Handled empty question
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_18
+Name       : Query: missing 'question' field → 422
+Status     : [PASS]
+Time       : 0.002s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  payload={} (missing question field)
+─── OUTPUT ─────────────────────────────────────────────────────
+HTTP 422: {"detail":[{"type":"missing","loc":["body","question"],"msg":"Field required","input":{}}]}
+─── NOTE ───────────────────────────────────────────────────────
+422 validation error as expected
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_19
+Name       : Query: very long question string
+Status     : [PASS]
+Time       : 0.128s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question=<long question 392 chars>
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "I don't know based on the provided documents.",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Long question handled
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_20
+Name       : Query: response time under 120 seconds
+Status     : [PASS]
+Time       : 0.432s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  + measure response time
+─── OUTPUT ─────────────────────────────────────────────────────
+Response time: 0.43s  HTTP 200
+─── NOTE ───────────────────────────────────────────────────────
+Within limit (0.4s)
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_21
+Name       : Query response JSON has 'answer' + 'sources'
+Status     : [PASS]
+Time       : 0.246s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query → verify JSON schema (answer + sources)
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "You can contact support by clicking 'Help' on the login page, or by sending an email to [support@yourcompany.com](mailto:support@yourcompany.com).",
+  "sources": [
+    "query_seed.txt",
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Schema correct
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_23
+Name       : Query on empty index returns dont-know response
+Status     : [PASS]
+Time       : 0.052s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/reset → POST /v1/query on empty index
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "I don't know based on the provided documents.",
+  "sources": []
+}
+─── NOTE ───────────────────────────────────────────────────────
+Correctly returns 'don't know' on empty index
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_27
+Name       : E2E: reset → upload → query refund timeline
+Status     : [PASS]
+Time       : 0.264s
+─── INPUT ──────────────────────────────────────────────────────
+E2E: reset → upload → query 'How long does a refund take?'
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "Based on the provided context, a refund takes 5-7 business days after the customer requests one.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Correct refund timeline found
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_28
+Name       : E2E: query invoice generation date
+Status     : [PASS]
+Time       : 0.102s
+─── INPUT ──────────────────────────────────────────────────────
+E2E: query 'When are invoices generated?'
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "Invoices are generated on the 1st day of billing.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Invoice info found
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_29
+Name       : E2E: query digital product refund policy
+Status     : [FAIL]
+Time       : 0.084s
+─── INPUT ──────────────────────────────────────────────────────
+E2E: query 'Can I get a refund on a digital product?'
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "I don't know based on the provided documents.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer: i don't know based on the provided documents.
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_11
+Name       : Query: password reset steps
+Status     : [PASS]
+Time       : 0.252s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/query  question="How do I reset my password?"
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "You can reset your password by clicking 'Forgot Password' on the login page, and a reset link will be sent to your registered email address. The link expires after 24 hours.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Answer mentions password reset
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_22
+Name       : Reset index returns status=success
+Status     : [PASS]
+Time       : 0.007s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/reset
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "success",
+  "message": "Index reset"
+}
+─── NOTE ───────────────────────────────────────────────────────
+Index reset successfully
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_24
+Name       : Double reset is idempotent
+Status     : [PASS]
+Time       : 0.015s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/reset  (called twice — idempotency check)
+─── OUTPUT ─────────────────────────────────────────────────────
+Second reset HTTP 200: {"status":"success","message":"Index reset"}
+─── NOTE ───────────────────────────────────────────────────────
+Idempotent
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_25
+Name       : Upload works correctly after reset
+Status     : [PASS]
+Time       : 0.065s
+─── INPUT ──────────────────────────────────────────────────────
+POST /v1/reset → POST /v1/documents/upload
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "status": "success",
+  "files_processed": [
+    "fresh.txt"
+  ],
+  "chunks_indexed": 1
+}
+─── NOTE ───────────────────────────────────────────────────────
+Re-upload after reset works
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_27
+Name       : E2E: reset → upload → query refund timeline
+Status     : [PASS]
+Time       : 0.261s
+─── INPUT ──────────────────────────────────────────────────────
+E2E: reset → upload → query 'How long does a refund take?'
+─── OUTPUT ─────────────────────────────────────────────────────
+{
+  "answer": "According to the source, a refund takes 5-7 business days to process after the customer requests one.",
+  "sources": [
+    "e2e.txt"
+  ]
+}
+─── NOTE ───────────────────────────────────────────────────────
+Correct refund timeline found
+
+------------------------------------------------------------------------------------------
+
+Test ID    : TC_API_26
+Name       : CORS preflight returns allow-origin header
+Status     : [PASS]
+Time       : 0.002s
+─── INPUT ──────────────────────────────────────────────────────
+OPTIONS /health  (CORS preflight)
+─── OUTPUT ─────────────────────────────────────────────────────
+access-control-allow-origin: http://localhost:3000
+─── NOTE ───────────────────────────────────────────────────────
+CORS header present
+
+------------------------------------------------------------------------------------------
+
+==========================================================================================
+  SUMMARY
+==========================================================================================
+  TC_ID          Test Name                                          Status     Time
+  -------------- -------------------------------------------------- -------- ------
+  TC_API_01      Health endpoint returns 200 + status=ok            PASS     0.004s
+  TC_API_02      Health endpoint includes components object         PASS     0.002s
+  TC_API_03      Health endpoint shows SLM as ready                 PASS     0.002s
+  TC_API_04      Health endpoint returns JSON content-type          PASS     0.002s
+  TC_API_05      Upload a .txt document successfully                PASS      0.02s
+  TC_API_06      Upload creates positive chunk count                PASS      0.06s
+  TC_API_07      Upload records filename in response                PASS     0.065s
+  TC_API_08      Upload multiple files in one request               PASS      0.09s
+  TC_API_09      Upload with no files → 422 validation error        PASS     0.004s
+  TC_API_25      Upload works correctly after reset                 PASS     0.074s
+  TC_API_27      E2E: reset → upload → query refund timeline        PASS     0.516s
+  TC_API_10      Query: refund policy                               PASS     0.754s
+  TC_API_11      Query: password reset steps                        PASS      0.26s
+  TC_API_12      Query: accepted payment methods                    FAIL     0.084s
+  TC_API_13      Query: contact customer support                    PASS     0.433s
+  TC_API_14      Query: return policy                               PASS     0.739s
+  TC_API_15      Query response includes sources list               PASS     0.636s
+  TC_API_16      Query: out-of-domain topic handled gracefully      PASS     0.092s
+  TC_API_17      Query: empty question string                       PASS     0.167s
+  TC_API_18      Query: missing 'question' field → 422              PASS     0.002s
+  TC_API_19      Query: very long question string                   PASS     0.128s
+  TC_API_20      Query: response time under 120 seconds             PASS     0.432s
+  TC_API_21      Query response JSON has 'answer' + 'sources'       PASS     0.246s
+  TC_API_23      Query on empty index returns dont-know response    PASS     0.052s
+  TC_API_27      E2E: reset → upload → query refund timeline        PASS     0.264s
+  TC_API_28      E2E: query invoice generation date                 PASS     0.102s
+  TC_API_29      E2E: query digital product refund policy           FAIL     0.084s
+  TC_API_11      Query: password reset steps                        PASS     0.252s
+  TC_API_22      Reset index returns status=success                 PASS     0.007s
+  TC_API_24      Double reset is idempotent                         PASS     0.015s
+  TC_API_25      Upload works correctly after reset                 PASS     0.065s
+  TC_API_27      E2E: reset → upload → query refund timeline        PASS     0.261s
+  TC_API_26      CORS preflight returns allow-origin header         PASS     0.002s
+
+  TOTAL PASS : 31/33
+  TOTAL FAIL : 2/33
+==========================================================================================

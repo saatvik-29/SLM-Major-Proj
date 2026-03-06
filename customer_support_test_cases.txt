@@ -1,0 +1,749 @@
+================================================================================
+           CUSTOMER SUPPORT SYSTEM - TEST CASE DOCUMENT
+================================================================================
+Project       : Customer Support System
+Prepared By   : QA Team
+Date          : 06-March-2026
+Version       : 1.0
+Total Cases   : 50
+================================================================================
+
+MODULES COVERED:
+  1. User Registration & Login
+  2. Ticket Management
+  3. Live Chat / Messaging
+  4. Knowledge Base / FAQ
+  5. Escalation & Priority
+  6. Agent Management
+  7. Notification System
+  8. Reporting & Analytics
+  9. Feedback & Ratings
+  10. Admin Panel
+
+================================================================================
+  MODULE 1: USER REGISTRATION & LOGIN
+================================================================================
+
+TEST CASE ID : TC_001
+Test Case Name: Valid User Registration
+Description   : Verify that a new customer can register with valid details.
+Pre-condition : User is on the Registration page.
+Test Steps    :
+  1. Navigate to the Register page.
+  2. Enter a valid name, email, and password.
+  3. Click the "Register" button.
+Expected Result: User is registered successfully and redirected to the dashboard.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_002
+Test Case Name: Registration with Duplicate Email
+Description   : Verify that duplicate email registration is rejected.
+Pre-condition : An account with the email already exists.
+Test Steps    :
+  1. Navigate to the Register page.
+  2. Enter an already-registered email address.
+  3. Click the "Register" button.
+Expected Result: Error message shown: "Email already in use. Please login."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_003
+Test Case Name: Registration with Empty Fields
+Description   : Verify that empty fields are not accepted during registration.
+Pre-condition : User is on the Registration page.
+Test Steps    :
+  1. Navigate to the Register page.
+  2. Leave all fields empty.
+  3. Click the "Register" button.
+Expected Result: Validation error shown for all required fields.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_004
+Test Case Name: Valid User Login
+Description   : Verify that a registered user can log in with correct credentials.
+Pre-condition : User is already registered.
+Test Steps    :
+  1. Navigate to the Login page.
+  2. Enter a valid email and password.
+  3. Click the "Login" button.
+Expected Result: User is logged in and redirected to the dashboard.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_005
+Test Case Name: Login with Invalid Password
+Description   : Verify that login fails with an incorrect password.
+Pre-condition : User is already registered.
+Test Steps    :
+  1. Navigate to the Login page.
+  2. Enter a valid email and an incorrect password.
+  3. Click the "Login" button.
+Expected Result: Error message: "Invalid email or password."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_006
+Test Case Name: Forgot Password - Valid Email
+Description   : Verify password reset email is sent for a valid registered email.
+Pre-condition : User is registered.
+Test Steps    :
+  1. Click "Forgot Password" on the Login page.
+  2. Enter the registered email address.
+  3. Click "Send Reset Link."
+Expected Result: A password reset link is sent to the user's email.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_007
+Test Case Name: User Logout
+Description   : Verify that a logged-in user can log out successfully.
+Pre-condition : User is logged in.
+Test Steps    :
+  1. Click the "Logout" button from the navigation menu.
+Expected Result: User is logged out and redirected to the Login page.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 2: TICKET MANAGEMENT
+================================================================================
+
+TEST CASE ID : TC_008
+Test Case Name: Create a New Support Ticket
+Description   : Verify that a customer can create a new support ticket.
+Pre-condition : User is logged in.
+Test Steps    :
+  1. Navigate to "Create Ticket" page.
+  2. Enter a subject, description, and select category.
+  3. Click "Submit Ticket."
+Expected Result: Ticket is created and assigned a unique Ticket ID.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_009
+Test Case Name: Create Ticket with Empty Subject
+Description   : Verify that a ticket cannot be submitted without a subject.
+Pre-condition : User is logged in.
+Test Steps    :
+  1. Navigate to "Create Ticket" page.
+  2. Leave the subject field empty.
+  3. Fill in the description and click "Submit Ticket."
+Expected Result: Validation error: "Subject is required."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_010
+Test Case Name: View All Open Tickets
+Description   : Verify that a user can view all their open tickets.
+Pre-condition : User is logged in and has at least one open ticket.
+Test Steps    :
+  1. Navigate to "My Tickets."
+  2. Filter by status "Open."
+Expected Result: All open tickets are listed with Ticket ID, subject, and date.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_011
+Test Case Name: Close a Ticket
+Description   : Verify that a user can close a resolved ticket.
+Pre-condition : User has at least one resolved ticket.
+Test Steps    :
+  1. Navigate to "My Tickets."
+  2. Open a resolved ticket.
+  3. Click "Mark as Closed."
+Expected Result: Ticket status changes to "Closed."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_012
+Test Case Name: Reopen a Closed Ticket
+Description   : Verify that a customer can reopen a closed ticket.
+Pre-condition : User has a closed ticket.
+Test Steps    :
+  1. Navigate to "My Tickets."
+  2. Open a closed ticket.
+  3. Click "Reopen Ticket."
+Expected Result: Ticket status changes back to "Open."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_013
+Test Case Name: Attach File to Ticket
+Description   : Verify that a user can attach a file while creating a ticket.
+Pre-condition : User is logged in.
+Test Steps    :
+  1. Navigate to "Create Ticket."
+  2. Fill in subject and description.
+  3. Click "Attach File" and upload a .jpg or .pdf file.
+  4. Click "Submit Ticket."
+Expected Result: Ticket is created with the attached file visible.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_014
+Test Case Name: Search Ticket by Ticket ID
+Description   : Verify that a ticket can be found by its unique ID.
+Pre-condition : At least one ticket exists.
+Test Steps    :
+  1. Navigate to the search bar.
+  2. Enter a valid Ticket ID.
+  3. Click "Search."
+Expected Result: The corresponding ticket is displayed.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_015
+Test Case Name: Auto-assign Ticket to Available Agent
+Description   : Verify that a new ticket is automatically assigned to an available agent.
+Pre-condition : At least one agent is online and available.
+Test Steps    :
+  1. Customer creates a new ticket.
+Expected Result: Ticket is automatically assigned to an available agent.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 3: LIVE CHAT / MESSAGING
+================================================================================
+
+TEST CASE ID : TC_016
+Test Case Name: Start a Live Chat Session
+Description   : Verify that a customer can initiate a live chat.
+Pre-condition : User is logged in and an agent is available.
+Test Steps    :
+  1. Click the "Live Chat" button on the portal.
+  2. Enter a brief description of the issue.
+  3. Click "Start Chat."
+Expected Result: Chat window opens and customer is connected to an agent.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_017
+Test Case Name: Send a Message in Chat
+Description   : Verify that a customer can send and receive messages.
+Pre-condition : Live chat session is active.
+Test Steps    :
+  1. Type a message in the chat input box.
+  2. Press "Send" or hit Enter.
+Expected Result: Message is sent and visible to both the customer and agent.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_018
+Test Case Name: End a Chat Session
+Description   : Verify that a user can end the chat session.
+Pre-condition : Live chat session is active.
+Test Steps    :
+  1. Click the "End Chat" button.
+Expected Result: Chat session ends and summary/transcript is shown.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_019
+Test Case Name: Chat With No Agents Available
+Description   : Verify behavior when no support agents are online.
+Pre-condition : No agents are currently logged in.
+Test Steps    :
+  1. Click the "Live Chat" button.
+Expected Result: Message shown: "No agents available. Please leave a message."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_020
+Test Case Name: Chat Session Timeout
+Description   : Verify that idle chat sessions are automatically closed after timeout.
+Pre-condition : Live chat session is active.
+Test Steps    :
+  1. Start a chat session.
+  2. Leave the chat idle for the configured timeout period (e.g. 5 minutes).
+Expected Result: Chat session is closed automatically with a timeout message.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 4: KNOWLEDGE BASE / FAQ
+================================================================================
+
+TEST CASE ID : TC_021
+Test Case Name: Browse Knowledge Base Articles
+Description   : Verify that a user can browse help articles.
+Pre-condition : Knowledge base has at least one article.
+Test Steps    :
+  1. Navigate to the "Help Center" or "Knowledge Base" page.
+  2. Browse available categories.
+  3. Click on a category.
+Expected Result: List of articles under that category is displayed.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_022
+Test Case Name: Search Knowledge Base
+Description   : Verify that a user can search for help articles by keyword.
+Pre-condition : Knowledge base has articles.
+Test Steps    :
+  1. Navigate to the Knowledge Base.
+  2. Enter a search keyword (e.g., "refund").
+  3. Click "Search."
+Expected Result: Relevant articles matching the keyword are displayed.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_023
+Test Case Name: Search with No Results
+Description   : Verify behavior when no articles match the search keyword.
+Pre-condition : Knowledge base is populated.
+Test Steps    :
+  1. Enter a keyword that doesn't match any article.
+  2. Click "Search."
+Expected Result: Message: "No articles found. Please contact support."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_024
+Test Case Name: View FAQ Page
+Description   : Verify that the FAQ page loads correctly.
+Pre-condition : FAQs are configured in the system.
+Test Steps    :
+  1. Navigate to the FAQ page.
+Expected Result: List of questions and answers is displayed correctly.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 5: ESCALATION & PRIORITY
+================================================================================
+
+TEST CASE ID : TC_025
+Test Case Name: Escalate a Ticket to Higher Level
+Description   : Verify that an agent can escalate a ticket to L2 support.
+Pre-condition : Agent is logged in and has an open ticket.
+Test Steps    :
+  1. Open an assigned ticket.
+  2. Click "Escalate Ticket."
+  3. Select escalation level (L2/L3).
+  4. Add a note and confirm.
+Expected Result: Ticket is escalated and the L2 agent is notified.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_026
+Test Case Name: Set Ticket Priority to High
+Description   : Verify that priority of a ticket can be changed to High.
+Pre-condition : Agent is logged in.
+Test Steps    :
+  1. Open any open ticket.
+  2. Change priority dropdown to "High."
+  3. Save the changes.
+Expected Result: Ticket priority is updated to "High."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_027
+Test Case Name: SLA Breach Notification
+Description   : Verify that a notification is sent when SLA time is about to breach.
+Pre-condition : SLA rules are configured.
+Test Steps    :
+  1. Create a high-priority ticket.
+  2. Do not respond within the SLA defined time.
+Expected Result: Alert/notification is sent to the agent and supervisor.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 6: AGENT MANAGEMENT
+================================================================================
+
+TEST CASE ID : TC_028
+Test Case Name: Add a New Agent
+Description   : Verify that an admin can add a new support agent.
+Pre-condition : Admin is logged in.
+Test Steps    :
+  1. Go to Admin Panel > Manage Agents.
+  2. Click "Add Agent."
+  3. Enter name, email, department, and role.
+  4. Click "Save."
+Expected Result: New agent is added and appears in the agents list.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_029
+Test Case Name: Deactivate an Agent Account
+Description   : Verify that an admin can deactivate an agent.
+Pre-condition : Admin is logged in and agent account exists.
+Test Steps    :
+  1. Go to Admin Panel > Manage Agents.
+  2. Select an agent and click "Deactivate."
+Expected Result: Agent account is deactivated and agent cannot log in.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_030
+Test Case Name: Assign Ticket to Specific Agent
+Description   : Verify that an admin/supervisor can manually assign a ticket to a specific agent.
+Pre-condition : Both agent and ticket exist.
+Test Steps    :
+  1. Open an unassigned ticket.
+  2. Use "Assign To" dropdown to select an agent.
+  3. Save.
+Expected Result: Ticket is assigned to the selected agent.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_031
+Test Case Name: Agent View Assigned Tickets
+Description   : Verify that an agent can see only their assigned tickets.
+Pre-condition : Agent is logged in.
+Test Steps    :
+  1. Navigate to "My Tickets" as an agent.
+Expected Result: Only tickets assigned to that agent are visible.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 7: NOTIFICATION SYSTEM
+================================================================================
+
+TEST CASE ID : TC_032
+Test Case Name: Email Notification on Ticket Creation
+Description   : Verify that a confirmation email is sent on ticket creation.
+Pre-condition : Email notification is enabled.
+Test Steps    :
+  1. Customer creates a new ticket.
+Expected Result: Confirmation email with Ticket ID is sent to the customer.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_033
+Test Case Name: Email Notification on Ticket Resolution
+Description   : Verify that an email is sent when a ticket is resolved.
+Pre-condition : Ticket is open and agent resolves it.
+Test Steps    :
+  1. Agent updates ticket status to "Resolved."
+Expected Result: Customer receives an email stating their ticket has been resolved.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_034
+Test Case Name: In-App Notification on New Message
+Description   : Verify that a push/in-app notification appears when a new message is received.
+Pre-condition : Chat session is active.
+Test Steps    :
+  1. Agent sends a message to the customer.
+Expected Result: Customer sees an in-app notification for the new message.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_035
+Test Case Name: Disable Email Notifications
+Description   : Verify that a user can opt out of email notifications.
+Pre-condition : User is logged in.
+Test Steps    :
+  1. Navigate to Account Settings > Notifications.
+  2. Toggle off "Email Notifications."
+  3. Save.
+Expected Result: User no longer receives email notifications.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 8: REPORTING & ANALYTICS
+================================================================================
+
+TEST CASE ID : TC_036
+Test Case Name: Admin Views Ticket Summary Report
+Description   : Verify that an admin can view a summary report of all tickets.
+Pre-condition : Admin is logged in. Tickets exist in the system.
+Test Steps    :
+  1. Navigate to Admin Panel > Reports.
+  2. Click "Ticket Summary."
+Expected Result: Report showing total, open, closed, and resolved tickets is displayed.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_037
+Test Case Name: Filter Report by Date Range
+Description   : Verify that reports can be filtered by a custom date range.
+Pre-condition : Admin is in the Reports section.
+Test Steps    :
+  1. Select a start date and end date.
+  2. Click "Apply Filter."
+Expected Result: Report data is filtered and only shows records within the date range.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_038
+Test Case Name: Export Report to CSV
+Description   : Verify that a report can be exported as a CSV file.
+Pre-condition : Admin is viewing a report.
+Test Steps    :
+  1. Click the "Export to CSV" button on the Reports page.
+Expected Result: CSV file is downloaded with correct report data.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_039
+Test Case Name: Agent Performance Report
+Description   : Verify that admin can view individual agent performance metrics.
+Pre-condition : Admin is logged in.
+Test Steps    :
+  1. Navigate to Reports > Agent Performance.
+  2. Select a specific agent.
+Expected Result: Report shows tickets resolved, avg response time, and rating for that agent.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 9: FEEDBACK & RATINGS
+================================================================================
+
+TEST CASE ID : TC_040
+Test Case Name: Customer Submits Feedback After Ticket Close
+Description   : Verify that a customer can rate the support experience.
+Pre-condition : Ticket has been resolved/closed.
+Test Steps    :
+  1. Open the closed ticket.
+  2. Click "Rate Your Experience."
+  3. Select a star rating (1-5) and add a comment.
+  4. Click "Submit Feedback."
+Expected Result: Feedback is recorded and a thank-you message is shown.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_041
+Test Case Name: Submit Feedback Without Rating
+Description   : Verify that feedback cannot be submitted without a star rating.
+Pre-condition : Ticket is closed.
+Test Steps    :
+  1. Click "Rate Your Experience."
+  2. Leave the star rating unselected.
+  3. Click "Submit Feedback."
+Expected Result: Error: "Please select a rating before submitting."
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_042
+Test Case Name: Admin Views Average Rating
+Description   : Verify that admin can view the overall average support rating.
+Pre-condition : At least one feedback is submitted.
+Test Steps    :
+  1. Navigate to Admin Panel > Feedback Overview.
+Expected Result: Average rating score and total feedback count is displayed.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+  MODULE 10: ADMIN PANEL
+================================================================================
+
+TEST CASE ID : TC_043
+Test Case Name: Admin Login
+Description   : Verify that the admin can login with valid admin credentials.
+Pre-condition : Admin account exists.
+Test Steps    :
+  1. Navigate to Admin Login page.
+  2. Enter admin email and password.
+  3. Click "Login."
+Expected Result: Admin is logged in and redirected to the admin dashboard.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_044
+Test Case Name: Admin Creates a New Category
+Description   : Verify that admin can create a new ticket category.
+Pre-condition : Admin is logged in.
+Test Steps    :
+  1. Go to Admin Panel > Categories.
+  2. Click "Add Category."
+  3. Enter a category name (e.g., "Billing").
+  4. Click "Save."
+Expected Result: New category is added and visible in the dropdown during ticket creation.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_045
+Test Case Name: Admin Deletes a Category
+Description   : Verify that admin can delete an existing category.
+Pre-condition : At least one category exists.
+Test Steps    :
+  1. Go to Admin Panel > Categories.
+  2. Select a category.
+  3. Click "Delete" and confirm.
+Expected Result: Category is removed from the list.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_046
+Test Case Name: Admin Configures SLA Rules
+Description   : Verify that admin can set SLA response time rules.
+Pre-condition : Admin is logged in.
+Test Steps    :
+  1. Go to Admin Panel > SLA Settings.
+  2. Set response time for High priority: 1 hour.
+  3. Click "Save."
+Expected Result: SLA rule is saved and applied to new high-priority tickets.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_047
+Test Case Name: Admin Manages Department
+Description   : Verify that admin can create and manage support departments.
+Pre-condition : Admin is logged in.
+Test Steps    :
+  1. Navigate to Admin Panel > Departments.
+  2. Click "Add Department" and enter a name (e.g., "Technical Support").
+  3. Click "Save."
+Expected Result: Department is created and agents can be assigned to it.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_048
+Test Case Name: Unauthorized Access to Admin Panel
+Description   : Verify that a regular customer cannot access the admin panel.
+Pre-condition : Customer is logged in.
+Test Steps    :
+  1. Manually navigate to the admin dashboard URL.
+Expected Result: Access denied. Redirected to customer dashboard or error page.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_049
+Test Case Name: System Works on Multiple Browsers
+Description   : Verify that the portal is functional across major browsers.
+Pre-condition : System is deployed.
+Test Steps    :
+  1. Open the portal on Chrome, Firefox, Edge, and Safari.
+  2. Login and perform basic operations on each.
+Expected Result: Portal loads and functions correctly on all tested browsers.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+TEST CASE ID : TC_050
+Test Case Name: Mobile Responsiveness Check
+Description   : Verify that the customer portal is responsive on mobile devices.
+Pre-condition : System is deployed.
+Test Steps    :
+  1. Open the portal on a mobile device (or emulator).
+  2. Navigate through key pages: Login, Tickets, Chat, FAQ.
+Expected Result: All pages display correctly and are fully usable on mobile.
+Actual Result : (To be filled after execution)
+Status        : [ ] Pass  [ ] Fail
+--------------------------------------------------------------------------------
+
+================================================================================
+                         TEST SUMMARY TABLE
+================================================================================
+
+| TC ID  | Module                      | Test Case Name                         | Status |
+|--------|-----------------------------|----------------------------------------|--------|
+| TC_001 | User Registration & Login   | Valid User Registration                 |        |
+| TC_002 | User Registration & Login   | Registration with Duplicate Email       |        |
+| TC_003 | User Registration & Login   | Registration with Empty Fields          |        |
+| TC_004 | User Registration & Login   | Valid User Login                        |        |
+| TC_005 | User Registration & Login   | Login with Invalid Password             |        |
+| TC_006 | User Registration & Login   | Forgot Password - Valid Email           |        |
+| TC_007 | User Registration & Login   | User Logout                             |        |
+| TC_008 | Ticket Management           | Create a New Support Ticket            |        |
+| TC_009 | Ticket Management           | Create Ticket with Empty Subject       |        |
+| TC_010 | Ticket Management           | View All Open Tickets                  |        |
+| TC_011 | Ticket Management           | Close a Ticket                         |        |
+| TC_012 | Ticket Management           | Reopen a Closed Ticket                 |        |
+| TC_013 | Ticket Management           | Attach File to Ticket                  |        |
+| TC_014 | Ticket Management           | Search Ticket by Ticket ID             |        |
+| TC_015 | Ticket Management           | Auto-assign Ticket to Agent            |        |
+| TC_016 | Live Chat                   | Start a Live Chat Session              |        |
+| TC_017 | Live Chat                   | Send a Message in Chat                 |        |
+| TC_018 | Live Chat                   | End a Chat Session                     |        |
+| TC_019 | Live Chat                   | Chat With No Agents Available          |        |
+| TC_020 | Live Chat                   | Chat Session Timeout                   |        |
+| TC_021 | Knowledge Base / FAQ        | Browse Knowledge Base Articles         |        |
+| TC_022 | Knowledge Base / FAQ        | Search Knowledge Base                  |        |
+| TC_023 | Knowledge Base / FAQ        | Search with No Results                 |        |
+| TC_024 | Knowledge Base / FAQ        | View FAQ Page                          |        |
+| TC_025 | Escalation & Priority       | Escalate a Ticket to Higher Level      |        |
+| TC_026 | Escalation & Priority       | Set Ticket Priority to High            |        |
+| TC_027 | Escalation & Priority       | SLA Breach Notification                |        |
+| TC_028 | Agent Management            | Add a New Agent                        |        |
+| TC_029 | Agent Management            | Deactivate an Agent Account            |        |
+| TC_030 | Agent Management            | Assign Ticket to Specific Agent        |        |
+| TC_031 | Agent Management            | Agent View Assigned Tickets            |        |
+| TC_032 | Notification System         | Email Notification on Ticket Creation  |        |
+| TC_033 | Notification System         | Email Notification on Ticket Resolution|        |
+| TC_034 | Notification System         | In-App Notification on New Message     |        |
+| TC_035 | Notification System         | Disable Email Notifications            |        |
+| TC_036 | Reporting & Analytics       | Admin Views Ticket Summary Report      |        |
+| TC_037 | Reporting & Analytics       | Filter Report by Date Range            |        |
+| TC_038 | Reporting & Analytics       | Export Report to CSV                   |        |
+| TC_039 | Reporting & Analytics       | Agent Performance Report               |        |
+| TC_040 | Feedback & Ratings          | Submit Feedback After Ticket Close     |        |
+| TC_041 | Feedback & Ratings          | Submit Feedback Without Rating         |        |
+| TC_042 | Feedback & Ratings          | Admin Views Average Rating             |        |
+| TC_043 | Admin Panel                 | Admin Login                            |        |
+| TC_044 | Admin Panel                 | Admin Creates a New Category           |        |
+| TC_045 | Admin Panel                 | Admin Deletes a Category               |        |
+| TC_046 | Admin Panel                 | Admin Configures SLA Rules             |        |
+| TC_047 | Admin Panel                 | Admin Manages Department               |        |
+| TC_048 | Admin Panel                 | Unauthorized Access to Admin Panel     |        |
+| TC_049 | Admin Panel                 | System Works on Multiple Browsers      |        |
+| TC_050 | Admin Panel                 | Mobile Responsiveness Check            |        |
+================================================================================
+
+Total Test Cases : 50
+Pass             : ___
+Fail             : ___
+Reviewed By      : ___________________
+Date             : ___________________
+
+================================================================================
+                         END OF DOCUMENT
+================================================================================
