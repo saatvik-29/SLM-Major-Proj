@@ -75,7 +75,7 @@ async def upload_documents(files: List[UploadFile] = File(...)):
 async def query(request: QueryRequest):
     with timer(f"Query: {request.question}"):
         # Retrieve (k=2 for faster, leaner context)
-        retrieved_docs = rag_engine.search(request.question, k=2)
+        retrieved_docs = rag_engine.search(request.question, k=4)
         
         if not retrieved_docs:
             return {
@@ -84,7 +84,7 @@ async def query(request: QueryRequest):
             }
         
         # Construct Context — trim each chunk to keep prompt small
-        MAX_CHUNK_CHARS = 500
+        MAX_CHUNK_CHARS = 800
         context_text = "\n\n".join(
             [f"Source: {d['source']}\nContent: {d['text'][:MAX_CHUNK_CHARS]}" for d in retrieved_docs]
         )

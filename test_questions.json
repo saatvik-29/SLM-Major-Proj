@@ -1,54 +1,474 @@
 [
     {
-        "question": "What is the refund policy?"
+        "question": "What is the objective of SRM hostels?"
     },
     {
-        "question": "How long does a refund take to process?"
+        "question": "How many hostel blocks are there for boys at SRM?"
     },
     {
-        "question": "Can I get a refund on a digital product?"
+        "question": "How many hostel blocks are there for girls at SRM?"
     },
     {
-        "question": "What is the deadline to request a refund?"
+        "question": "What is the total capacity of the boys' hostel at SRM?"
     },
     {
-        "question": "How do I reset my password?"
+        "question": "What is the total capacity of the girls' hostel at SRM?"
     },
     {
-        "question": "How long is the password reset link valid?"
+        "question": "Who are the hostels allocated for at SRM?"
     },
     {
-        "question": "Where do I find the Forgot Password option?"
+        "question": "What are the names of the girls' hostel blocks at SRM?"
     },
     {
-        "question": "What payment methods do you accept?"
+        "question": "What is Kopperundevi (M Block)?"
     },
     {
-        "question": "When are invoices generated?"
+        "question": "How many floors does Kopperundevi M Block have?"
     },
     {
-        "question": "Who do I contact for billing disputes?"
+        "question": "What type of rooms are available in Kopperundevi block?"
     },
     {
-        "question": "What is the return policy?"
+        "question": "What is the warden email for Kopperundevi block?"
     },
     {
-        "question": "Who pays for return shipping?"
+        "question": "What is the warden contact number for Kopperundevi block?"
     },
     {
-        "question": "How long does it take to get store credit after a return?"
+        "question": "What is Senbagam block?"
     },
     {
-        "question": "How can I contact customer support?"
+        "question": "How many floors does Senbagam block have?"
     },
     {
-        "question": "What are the support hours?"
+        "question": "What sharing options are available in Senbagam block?"
     },
     {
-        "question": "Is live chat available 24/7?"
+        "question": "What is the warden email for Senbagam block?"
     },
     {
-        "question": "What is the customer support email address?"
+        "question": "What is the warden contact number for Senbagam block?"
+    },
+    {
+        "question": "What is ESQ A Block?"
+    },
+    {
+        "question": "How many flats are there in ESQ A Block?"
+    },
+    {
+        "question": "What sharing options are available in ESQ A Block?"
+    },
+    {
+        "question": "What is the warden email for ESQ A Block?"
+    },
+    {
+        "question": "What is the warden contact number for ESQ A Block?"
+    },
+    {
+        "question": "What is ESQ B Block?"
+    },
+    {
+        "question": "How many flats are there in ESQ B Block?"
+    },
+    {
+        "question": "What sharing options does ESQ B Block offer?"
+    },
+    {
+        "question": "What is the warden email for ESQ B Block?"
+    },
+    {
+        "question": "What is the warden contact number for ESQ B Block?"
+    },
+    {
+        "question": "What is Kalpana Chawla Hostel?"
+    },
+    {
+        "question": "How many floors does Kalpana Chawla block have?"
+    },
+    {
+        "question": "Are AC rooms available in Kalpana Chawla block?"
+    },
+    {
+        "question": "What type of cots are in Kalpana Chawla block?"
+    },
+    {
+        "question": "What is the warden email for Kalpana Chawla block?"
+    },
+    {
+        "question": "What is the warden contact number for Kalpana Chawla block?"
+    },
+    {
+        "question": "What is Meenakshi Hostel?"
+    },
+    {
+        "question": "How many floors does Meenakshi block have?"
+    },
+    {
+        "question": "Does Meenakshi block have AC rooms?"
+    },
+    {
+        "question": "What sharing options are available in Meenakshi block?"
+    },
+    {
+        "question": "What is the warden email for Meenakshi block?"
+    },
+    {
+        "question": "What is the warden contact number for Meenakshi block?"
+    },
+    {
+        "question": "What is Malligai Block?"
+    },
+    {
+        "question": "How many floors does Malligai block have?"
+    },
+    {
+        "question": "What sharing type does Malligai block offer?"
+    },
+    {
+        "question": "What is the warden email for Malligai block?"
+    },
+    {
+        "question": "What is the warden contact number for Malligai block?"
+    },
+    {
+        "question": "What is Thamarai Block?"
+    },
+    {
+        "question": "How many floors does Thamarai block have?"
+    },
+    {
+        "question": "What sharing type does Thamarai block offer?"
+    },
+    {
+        "question": "What is the warden email for Thamarai block?"
+    },
+    {
+        "question": "What is the warden contact number for Thamarai block?"
+    },
+    {
+        "question": "Which girls hostel blocks have AC rooms?"
+    },
+    {
+        "question": "Which girls hostel blocks have attached washrooms?"
+    },
+    {
+        "question": "Which girls hostel blocks have common washrooms?"
+    },
+    {
+        "question": "Which is the tallest girls hostel block at SRM?"
+    },
+    {
+        "question": "What are the names of the boys' hostel blocks at SRM?"
+    },
+    {
+        "question": "What is Paari Block?"
+    },
+    {
+        "question": "How many floors does Paari block have?"
+    },
+    {
+        "question": "What sharing options are available in Paari block?"
+    },
+    {
+        "question": "Does Paari block have AC rooms?"
+    },
+    {
+        "question": "What is the warden email for Paari block?"
+    },
+    {
+        "question": "What is the warden contact number for Paari block?"
+    },
+    {
+        "question": "What is Kaari Block?"
+    },
+    {
+        "question": "How many floors does Kaari block have?"
+    },
+    {
+        "question": "What sharing options does Kaari block offer?"
+    },
+    {
+        "question": "What is the warden email for Kaari block?"
+    },
+    {
+        "question": "What is the warden contact number for Kaari block?"
+    },
+    {
+        "question": "What is Oori Block?"
+    },
+    {
+        "question": "Does Oori block have AC rooms?"
+    },
+    {
+        "question": "What facilities does Oori block have?"
+    },
+    {
+        "question": "How many floors does Oori block have?"
+    },
+    {
+        "question": "What is the warden email for Oori block?"
+    },
+    {
+        "question": "What is the warden contact number for Oori block?"
+    },
+    {
+        "question": "What is Adhiyaman Block?"
+    },
+    {
+        "question": "What sharing options does Adhiyaman block offer?"
+    },
+    {
+        "question": "Does Adhiyaman block have attached washrooms?"
+    },
+    {
+        "question": "How many floors does Adhiyaman block have?"
+    },
+    {
+        "question": "What is the warden email for Adhiyaman block?"
+    },
+    {
+        "question": "What is the warden contact number for Adhiyaman block?"
+    },
+    {
+        "question": "What is Nelson Mandela Block?"
+    },
+    {
+        "question": "What type of rooms does Nelson Mandela block have?"
+    },
+    {
+        "question": "How many floors does Nelson Mandela block have?"
+    },
+    {
+        "question": "What is the warden email for Nelson Mandela block?"
+    },
+    {
+        "question": "What is the warden contact number for Nelson Mandela block?"
+    },
+    {
+        "question": "What is Manoranjitham Block?"
+    },
+    {
+        "question": "How many floors does Manoranjitham block have?"
+    },
+    {
+        "question": "What sharing type does Manoranjitham block offer?"
+    },
+    {
+        "question": "What is the warden email for Manoranjitham block?"
+    },
+    {
+        "question": "What is the warden contact number for Manoranjitham block?"
+    },
+    {
+        "question": "What is Mullai Block?"
+    },
+    {
+        "question": "How many floors does Mullai block have?"
+    },
+    {
+        "question": "What sharing type does Mullai block offer?"
+    },
+    {
+        "question": "What is the warden email for Mullai block?"
+    },
+    {
+        "question": "What is the warden contact number for Mullai block?"
+    },
+    {
+        "question": "What is Sannasi Block?"
+    },
+    {
+        "question": "How many floors does Sannasi block have?"
+    },
+    {
+        "question": "Does Sannasi block offer both AC and non-AC rooms?"
+    },
+    {
+        "question": "What is the warden email for Sannasi block?"
+    },
+    {
+        "question": "What is the warden contact number for Sannasi block?"
+    },
+    {
+        "question": "What is Agasthiyar Block?"
+    },
+    {
+        "question": "How many floors does Agasthiyar block have?"
+    },
+    {
+        "question": "What sharing type does Agasthiyar block offer?"
+    },
+    {
+        "question": "What is the warden email for Agasthiyar block?"
+    },
+    {
+        "question": "What is the warden contact number for Agasthiyar block?"
+    },
+    {
+        "question": "What is Began Block?"
+    },
+    {
+        "question": "How many floors does Began block have?"
+    },
+    {
+        "question": "What sharing options does Began block offer?"
+    },
+    {
+        "question": "Where is Began Hostel located on campus?"
+    },
+    {
+        "question": "What is the warden email for Began block?"
+    },
+    {
+        "question": "What is the warden contact number for Began block?"
+    },
+    {
+        "question": "Which boys hostel blocks have AC rooms?"
+    },
+    {
+        "question": "Which boys hostel blocks have attached washrooms?"
+    },
+    {
+        "question": "Which boys hostel blocks have common washrooms?"
+    },
+    {
+        "question": "Which boys hostel block has a study hall?"
+    },
+    {
+        "question": "What amenities are available in SRM girls hostels?"
+    },
+    {
+        "question": "Is Wi-Fi available in SRM hostels?"
+    },
+    {
+        "question": "Is there a gym in the SRM girls hostel?"
+    },
+    {
+        "question": "Is there CCTV surveillance in SRM hostels?"
+    },
+    {
+        "question": "Are there security guards in SRM hostels?"
+    },
+    {
+        "question": "Is there a biometric attendance system in SRM hostels?"
+    },
+    {
+        "question": "Is there power backup in SRM hostels?"
+    },
+    {
+        "question": "Is purified drinking water available in SRM hostels?"
+    },
+    {
+        "question": "Are there indoor games available in SRM hostels?"
+    },
+    {
+        "question": "Are there outdoor games available in SRM hostels?"
+    },
+    {
+        "question": "Are there supermarkets inside SRM hostel premises?"
+    },
+    {
+        "question": "Are there eateries inside SRM hostel premises?"
+    },
+    {
+        "question": "Is photocopy service available in SRM hostels?"
+    },
+    {
+        "question": "What shops are available in the SRM hostel premises?"
+    },
+    {
+        "question": "Are rooms furnished in SRM hostels?"
+    },
+    {
+        "question": "What furniture is provided in SRM hostel rooms?"
+    },
+    {
+        "question": "What is the hostel admission policy at SRM?"
+    },
+    {
+        "question": "What is the hostel fees structure at SRM?"
+    },
+    {
+        "question": "How do I pay hostel fees at SRM?"
+    },
+    {
+        "question": "What is the hostel fee refund policy at SRM?"
+    },
+    {
+        "question": "How are rooms allotted in SRM hostels?"
+    },
+    {
+        "question": "Is guest accommodation available in SRM hostels?"
+    },
+    {
+        "question": "What is the mess policy in SRM hostels?"
+    },
+    {
+        "question": "How do I raise a maintenance complaint in SRM hostels?"
+    },
+    {
+        "question": "What is the anti-ragging policy in SRM hostels?"
+    },
+    {
+        "question": "What are the general discipline rules in SRM hostels?"
+    },
+    {
+        "question": "What happens during summer break for hostel students?"
+    },
+    {
+        "question": "Is medical assistance available in SRM hostels?"
+    },
+    {
+        "question": "What are the powers and functions of wardens in SRM hostels?"
+    },
+    {
+        "question": "What are the powers of resident wardens in SRM hostels?"
+    },
+    {
+        "question": "What is the grievance redressal process in SRM hostels?"
+    },
+    {
+        "question": "What is the disciplinary committee in SRM hostels?"
+    },
+    {
+        "question": "How can a student be readmitted to the hostel after suspension?"
+    },
+    {
+        "question": "What is the role of hostel representatives at SRM?"
+    },
+    {
+        "question": "What is the fine policy for hostel rule violations at SRM?"
+    },
+    {
+        "question": "Which SRM hostel block is best for AC rooms?"
+    },
+    {
+        "question": "Which SRM hostel block is cheapest (non-AC)?"
+    },
+    {
+        "question": "What is the difference between ESQ A and ESQ B block?"
+    },
+    {
+        "question": "What is the difference between Malligai and Thamarai block?"
+    },
+    {
+        "question": "Which boys hostel blocks have both AC and non-AC options?"
+    },
+    {
+        "question": "Which girls hostel block has the most floors?"
+    },
+    {
+        "question": "Which boys hostel block has the most floors?"
+    },
+    {
+        "question": "Which hostel blocks are north-facing?"
+    },
+    {
+        "question": "Which hostel blocks are west-facing?"
+    },
+    {
+        "question": "Which hostel blocks are east-facing?"
     },
     {
         "question": "What is the capital of France?"
@@ -60,18 +480,24 @@
         "question": "!@#$%^&*() special characters"
     },
     {
-        "question": "Can I get a refund AND reset my password?"
+        "question": "Tell me everything about SRM"
     },
     {
-        "question": "REFUND POLICY IN CAPS?"
+        "question": "Which is the best hostel in the world?"
     },
     {
-        "question": "   refund   "
+        "question": "   senbagam   "
     },
     {
-        "question": "How much does it cost?"
+        "question": "KOPPERUNDEVI BLOCK IN CAPS?"
     },
     {
-        "question": "Tell me everything about your company"
+        "question": "Can I join both boys and girls hostel?"
+    },
+    {
+        "question": "How much does it cost to stay in the hostel?"
+    },
+    {
+        "question": "What is the warden number AND email for Paari block?"
     }
 ]
